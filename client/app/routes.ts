@@ -5,4 +5,5 @@ export default [
     index("routes/home.tsx"),
     route("board/:boardId", "routes/board.tsx"),
   ]),
+  route("*", "routes/notFount.tsx"),
 ] satisfies RouteConfig;
