@@ -1,7 +1,11 @@
 import { Search } from "lucide-react";
 import { Link } from "react-router";
 
-export default function Header() {
+interface IProps {
+  setSearchParam: (param: string) => void;
+}
+
+export default function Header({ setSearchParam }: IProps) {
   return (
     <header className="w-full h-[50px] border-b-2 border-[#2f2f2f] flex items-center justify-between pr-[50px] pl-[50px]">
       <div className="bg-[#282828] h-[30px] w-[400px] flex rounded-[5px] items-center p-[10px]">

@@ -5,7 +5,7 @@ import { Calendar, File, List, MessageCircle, Users } from "lucide-react";
 export default function SideBar() {
   const location = useLocation();
   return (
-    <aside className="w-[250px] bg-[#353535] h-screen relative left-0 p-[10px]">
+    <aside className="w-[250px] bg-[#202020] h-screen relative left-0 p-[10px]">
       <h2 className="text-center">Logo</h2>
       <div className="mt-[10px] flex flex-col pt-[20px]">
         {buttons.map((el, index) => (

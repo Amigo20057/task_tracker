@@ -10,8 +10,9 @@ type Priority = "P1" | "P2" | "P3";
 
 export interface IBoard extends IBase {
   name: string;
-  tasks: ITask[];
-  users: IUser[];
+  tasks: ITask[] | null;
+  userCreator: IUser;
+  users: IUser[] | null;
   accessability: Accessability;
 }
 
