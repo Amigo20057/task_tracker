@@ -8,6 +8,8 @@ type Accessability = "public" | "private";
 //P3 - Low Priority
 type Priority = "P1" | "P2" | "P3";
 
+type TaskType = "Task" | "Bag";
+
 export interface IBoard extends IBase {
   name: string;
   tasks: ITask[] | null;
@@ -19,6 +21,7 @@ export interface IBoard extends IBase {
 export interface ITask extends IBase {
   name: string;
   description?: string;
+  taskType: TaskType;
   assigned: IUser | IUser[];
   deadline: string;
   priority: Priority;
