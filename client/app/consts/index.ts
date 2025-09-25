@@ -14,7 +14,7 @@ export const Boards: IBoard[] = [
   {
     id: "1",
     name: "Board 1",
-    tasks: [],
+    sections: [],
     userCreator: MainUser,
     users: [],
     accessability: "private",
@@ -24,7 +24,7 @@ export const Boards: IBoard[] = [
   {
     id: "2",
     name: "Board 2",
-    tasks: [],
+    sections: [],
     userCreator: MainUser,
     users: [],
     accessability: "private",

@@ -12,17 +12,25 @@ type TaskType = "Task" | "Bag";
 
 export interface IBoard extends IBase {
   name: string;
-  tasks: ITask[] | null;
+  sections: ISectionBoard[] | null;
   userCreator: IUser;
   users: IUser[] | null;
   accessability: Accessability;
 }
 
+export interface ISectionBoard extends IBase {
+  name: string;
+  tasksCount: number;
+  color?: string;
+  tasks: ITask[];
+}
+
 export interface ITask extends IBase {
   name: string;
   description?: string;
+  creator: IUser;
   taskType: TaskType;
-  assigned: IUser | IUser[];
+  assigned: IUser[] | null;
   deadline: string;
   priority: Priority;
 }
