@@ -30,7 +30,7 @@ export interface ITask extends IBase {
   description?: string;
   creator: IUser;
   taskType: TaskType;
-  assigned: IUser[] | null;
-  deadline: string;
+  assigned: IUser[] | IUser | null;
+  deadline: Date;
   priority: Priority;
 }

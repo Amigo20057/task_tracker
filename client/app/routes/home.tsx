@@ -1,7 +1,7 @@
 import { Boards } from "~/consts";
 import type { Route } from "./+types/home";
 import type { IBoard } from "~/types/task.interface";
-import MiniBoard from "~/components/miniBoard";
+import MiniBoard from "~/components/ui/miniBoard";
 
 export function meta({}: Route.MetaArgs) {
   return [
