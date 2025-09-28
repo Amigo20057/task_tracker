@@ -34,12 +34,12 @@ export default function Header({ setSearchParam }: IProps) {
           <>
             <Link
               className="ml-[20px] mr-[10px] h-[30px] pointer text-[15px] p-2 rounded-[8px] pl-[10px] flex items-center bg-[#565aee]"
-              to="/register"
+              to="/auth/register"
             >
               Register
             </Link>
             <Link
-              to="/login"
+              to="/auth/login"
               className="h-[30px] pointer text-[15px] p-2 rounded-[8px] pl-[10px] flex items-center bg-[#565aee]"
             >
               Login

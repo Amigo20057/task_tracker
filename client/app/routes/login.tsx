@@ -1,3 +1,4 @@
+import FormCommon from "~/components/ui/form";
 import type { Route } from "./+types/login";
 
 export function meta({}: Route.MetaArgs) {
@@ -9,6 +10,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Login() {
   return (
-    <div className="w-full h-screen bg-[#141414] flex items-center justify-center"></div>
+    <div className="w-full h-screen bg-[#141414] flex items-center justify-center">
+      <FormCommon formType="login" />
+    </div>
   );
 }
