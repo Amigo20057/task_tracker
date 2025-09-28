@@ -5,5 +5,9 @@ export default [
     index("routes/home.tsx"),
     route("board/:boardId", "routes/board.tsx"),
   ]),
+  route("/auth", "layouts/auth/auth-layout.tsx", [
+    route("/register", "routes/register.tsx"),
+    route("/login", "routes/login.tsx"),
+  ]),
   route("*", "routes/notFount.tsx"),
 ] satisfies RouteConfig;
