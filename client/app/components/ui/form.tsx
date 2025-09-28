@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link } from "react-router";
 import type { IUser } from "~/types/user.interface";
@@ -12,9 +13,16 @@ export default function FormCommon({ formType }: IProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<IUser>();
+  const query = useQuery({
+    queryKey: ["user"],
+  });
 
   const onSubmit: SubmitHandler<IUser> = (data) => {
     console.log(`${formType} data:`, data);
+
+    if (formType === "register" && formType !== undefined) {
+    } else if (formType === "login" && formType !== undefined) {
+    }
   };
 
   return (
