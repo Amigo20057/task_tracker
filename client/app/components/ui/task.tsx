@@ -20,6 +20,7 @@ export default function Task({
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.6 : 1,
     cursor: "grab",
+    transition: "transform 0.15s ease, opacity 0.15s ease",
   };
 
   const priorityColor =
@@ -58,7 +59,9 @@ export default function Task({
 
   return (
     <div
-      className="bg-[#323231] p-3 rounded-xl shadow hover:shadow-lg transition text-white"
+      className="bg-[#323231]/90 p-3 rounded-xl shadow-md 
+             hover:shadow-xl hover:-translate-y-1 
+             transition-all duration-200 text-white border border-white/10"
       style={style}
       ref={setNodeRef}
       {...listeners}
@@ -66,13 +69,16 @@ export default function Task({
     >
       <h3 className="font-medium">{name}</h3>
       <p
-        className={`mt-[5px] mb-[5px] text-[13px] font-semibold px-2 py-1 rounded ${priorityColor} inline-block`}
+        className={`mt-2 text-[12px] font-semibold px-3 py-1 rounded-full 
+              ${priorityColor} shadow-sm shadow-black/30`}
       >
         {priority}
       </p>
       <div className="mt-2 flex flex-col gap-2">{renderAssignedUsers()}</div>
       <p
-        className={`mt-[10px] mb-[5px] text-[13px] font-semibold px-2 py-1 rounded ${taskType === "Task" ? "bg-[#456483]" : "bg-[#894953]"} inline-block`}
+        className={`mt-2 text-[12px] font-semibold px-3 py-1 rounded-full 
+              ${taskType === "Task" ? "bg-[#3b82f6]/70" : "bg-[#ef4444]/70"} 
+              shadow-sm shadow-black/30`}
       >
         {taskType}
       </p>

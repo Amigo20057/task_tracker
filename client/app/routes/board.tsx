@@ -30,7 +30,7 @@ export default function Board({ loaderData }: Route.ComponentProps) {
 
   return (
     <DndContext onDragEnd={(event) => console.log("Dropped:", event)}>
-      <div className="p-6 flex flex-col h-full">
+      <div className="p-6 flex flex-col h-full bg-gradient-to-br from-[#1a1a1a] via-[#222] to-[#2c2c2c] text-white">
         <h1 className="text-3xl font-bold mb-6">{board.name}</h1>
 
         <div className="flex gap-6 overflow-x-auto flex-1">
@@ -38,7 +38,10 @@ export default function Board({ loaderData }: Route.ComponentProps) {
             ? board.sections.map((section) => (
                 <div
                   key={section.id}
-                  className="w-72 flex-shrink-0 bg-[#202020] rounded-2xl p-4 shadow-md flex flex-col"
+                  className="w-72 flex-shrink-0 bg-[#202020]/80 backdrop-blur-md 
+             rounded-2xl p-4 shadow-lg shadow-black/40 
+             flex flex-col border border-white/10 transition 
+             hover:shadow-xl  duration-200"
                 >
                   <h2 className="text-lg font-semibold mb-3">{section.name}</h2>
 
