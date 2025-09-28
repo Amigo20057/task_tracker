@@ -1,6 +1,8 @@
 import type { IBoard } from "~/types/task.interface";
 import type { IUser } from "~/types/user.interface";
 
+export const ISAUTH = false;
+
 export const MainUser: IUser = {
   id: "user_1",
   name: "amigo",
