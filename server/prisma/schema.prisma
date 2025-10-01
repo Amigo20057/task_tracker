@@ -27,11 +27,11 @@ model User{
   @@map("users")
 }
 
-model Board{
-  id String @id() @default(uuid())
+// model Board{
+//   id String @id() @default(uuid())
 
-  name String
+//   name String
   
 
-  @@map("boards")
-}
+//   @@map("boards")
+// }

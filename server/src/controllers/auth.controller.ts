@@ -18,8 +18,11 @@ export class AuthController {
         maxAge: 1000 * 60 * 60,
       });
       return res.status(201).json({ user });
-    } catch (error) {
-      return res.status(400).json({ message: "Registration failed", error });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res
+        .status(400)
+        .json({ message: "Register failed", error: message });
     }
   };
 
@@ -33,8 +36,9 @@ export class AuthController {
         maxAge: 1000 * 60 * 60,
       });
       return res.status(200).json({ user });
-    } catch (error) {
-      return res.status(400).json({ message: "Login failed", error });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res.status(400).json({ message: "Login failed", error: message });
     }
   };
 
