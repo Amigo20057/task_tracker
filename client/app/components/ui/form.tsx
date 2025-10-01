@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link } from "react-router";
+import { userRegister } from "~/hooks/user/mutation/useRegister";
+import { useLogin } from "~/hooks/user/mutation/userLogin";
 import type { IUser } from "~/types/user.interface";
 
 interface IProps {
@@ -13,15 +14,16 @@ export default function FormCommon({ formType }: IProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<IUser>();
-  const query = useQuery({
-    queryKey: ["user"],
-  });
+  const { registerMutation } = userRegister();
+  const { loginMutation } = useLogin();
 
   const onSubmit: SubmitHandler<IUser> = (data) => {
     console.log(`${formType} data:`, data);
 
     if (formType === "register" && formType !== undefined) {
+      registerMutation.mutate(data);
     } else if (formType === "login" && formType !== undefined) {
+      loginMutation.mutate(data);
     }
   };
 
