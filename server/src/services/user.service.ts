@@ -8,6 +8,14 @@ export class UserService {
     this.prisma = prisma;
   }
 
+  public async findUserByEmail(email: string): Promise<User | null> {
+    return await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
+
   public async createUser(user: User): Promise<User> {
     return await this.prisma.user.create({ data: user });
   }
