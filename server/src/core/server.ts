@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, request, Request, Response } from "express";
 import { ConfigService } from "../config/config.service";
 import compression from "compression";
 import cors from "cors";
@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import { AuthController } from "../controllers/auth.controller";
 import { AuthService } from "../services/auth.service";
 import { UserService } from "../services/user.service";
+import { authMiddleware } from "../utils/auth.middleware";
+import { UserController } from "../controllers/user.controller";
 
 export class Application {
   private app: express.Application;
@@ -14,14 +16,18 @@ export class Application {
   private userService: UserService;
   private authService: AuthService;
   private authController: AuthController;
+  private userController: UserController;
   private authRouter: express.Router;
+  private userRouter: express.Router;
 
   public constructor(private readonly config: ConfigService) {
     this.port = this.config.get<number>("APPLICATION_PORT");
     this.authRouter = express.Router();
+    this.userRouter = express.Router();
     this.userService = new UserService(this.config);
     this.authService = new AuthService(this.userService, this.config);
     this.authController = new AuthController(this.authService, this.config);
+    this.userController = new UserController(this.userService);
     this.app = this.createApplication();
   }
 
@@ -42,7 +48,14 @@ export class Application {
     this.authRouter.post("/login", this.authController.login);
     this.authRouter.post("/logout", this.authController.logout);
 
+    this.userRouter.get(
+      "/profile",
+      authMiddleware(this.config),
+      this.userController.profile
+    );
+
     app.use("/auth", this.authRouter);
+    app.use("/users", this.userRouter);
 
     app.use((req, res) => {
       res.status(404).json({ message: "Not found" });
