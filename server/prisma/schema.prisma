@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -14,24 +8,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @id() @default(uuid())
-
-  name String
-  email String @unique
-  password String
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+model User {
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
+  password       String
+  createdBoards  Board[]  @relation("UserCreatedBoards")
+  boards         Board[]  @relation("BoardUsers")
+  createdTasks   Task[]   @relation("CreatedTasks")
+  assignedTasks  Task[]   @relation("AssignedTasks")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
   
   @@map("users")
 }
 
-// model Board{
-//   id String @id() @default(uuid())
-
-//   name String
+model Board {
+  id            String        @id @default(uuid())
+  name          String
+  accessability Accessability @default(public)
+  sections      Section[]
+  userCreator   User          @relation("UserCreatedBoards", fields: [userCreatorId], references: [id])
+  userCreatorId String        @map("user_creator_id")
+  users         User[]        @relation("BoardUsers")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
   
+  @@map("boards")
+}
 
-//   @@map("boards")
-// }
+model Section {
+  id          String   @id @default(uuid())
+  name        String
+  tasksCount  Int      @map("tasks_count")
+  color       String?  @default("BLACK")
+  board       Board    @relation(fields: [boardId], references: [id])
+  boardId     String   @map("board_id")
+  tasks       Task[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  @@map("sections")
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  taskType    TaskType @map("task_type")
+  deadline    DateTime
+  priority    Priority
+  creator     User     @relation("CreatedTasks", fields: [creatorId], references: [id])
+  creatorId   String   @map("creator_id")
+  assigned    User[]   @relation("AssignedTasks")
+  section     Section  @relation(fields: [sectionId], references: [id])
+  sectionId   String   @map("section_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  @@map("tasks")
+}
+
+enum TaskType {
+  Task
+  Bag
+}
+
+enum Priority {
+  P1
+  P2
+  P3
+}
+
+enum Accessability {
+  public
+  private
+}
