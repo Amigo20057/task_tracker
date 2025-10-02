@@ -8,7 +8,7 @@ export const useLogout = () => {
   const logoutMutation = useMutation({
     mutationFn: async () => {
       return await axios.post(
-        `${import.meta.env.VITE_API_GATEWAY_URL}/auth/logout`,
+        `${import.meta.env.VITE_SERVER_URL}/auth/logout`,
         {},
         { withCredentials: true }
       );

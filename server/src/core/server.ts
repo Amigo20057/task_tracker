@@ -39,7 +39,8 @@ export class Application {
     app.use(express.json());
     app.use(
       cors({
-        origin: this.config.get<string>("CLIENT_URL"),
+        origin: [this.config.get<string>("CLIENT_URL")],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true,
       })
     );
