@@ -8,7 +8,6 @@ export const MainUser: IUser = {
   name: "amigo",
   email: "denrizuk@gmail.com",
   password: "dasjrkl321qwnrd",
-  color: "bg-red-500",
   createdAt: new Date(),
   updatedAt: new Date(),
 };
