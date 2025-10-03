@@ -9,25 +9,33 @@ import { AuthService } from "../services/auth.service";
 import { UserService } from "../services/user.service";
 import { authMiddleware } from "../utils/auth.middleware";
 import { UserController } from "../controllers/user.controller";
+import { BoardService } from "../services/board.service";
+import { BoardController } from "../controllers/board.controller";
 
 export class Application {
   private app: express.Application;
   private port: number;
   private userService: UserService;
   private authService: AuthService;
+  private boardService: BoardService;
   private authController: AuthController;
   private userController: UserController;
+  private boardController: BoardController;
   private authRouter: express.Router;
   private userRouter: express.Router;
+  private boardRouter: express.Router;
 
   public constructor(private readonly config: ConfigService) {
     this.port = this.config.get<number>("APPLICATION_PORT");
     this.authRouter = express.Router();
     this.userRouter = express.Router();
+    this.boardRouter = express.Router();
     this.userService = new UserService(this.config);
     this.authService = new AuthService(this.userService, this.config);
+    this.boardService = new BoardService();
     this.authController = new AuthController(this.authService, this.config);
     this.userController = new UserController(this.userService);
+    this.boardController = new BoardController(this.boardService);
     this.app = this.createApplication();
   }
 
@@ -55,8 +63,25 @@ export class Application {
       this.userController.profile
     );
 
+    this.boardRouter.post(
+      "/create",
+      authMiddleware(this.config),
+      this.boardController.create
+    );
+    this.boardRouter.get(
+      "/by-id/:boardId",
+      authMiddleware(this.config),
+      this.boardController.findBoardById
+    );
+    this.boardRouter.get(
+      "/",
+      authMiddleware(this.config),
+      this.boardController.findBoardsByUserId
+    );
+
     app.use("/auth", this.authRouter);
     app.use("/users", this.userRouter);
+    app.use("/boards", this.boardRouter);
 
     app.use((req, res) => {
       res.status(404).json({ message: "Not found" });

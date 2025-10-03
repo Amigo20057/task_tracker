@@ -1,0 +1,49 @@
+import { Request, Response } from "express";
+import { BoardService } from "../services/board.service";
+
+export class BoardController {
+  public constructor(private readonly boardService: BoardService) {}
+
+  public create = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const { name } = req.body;
+      const board = await this.boardService.createBoard(name, req.user.id);
+      res.status(201).json(board);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res
+        .status(400)
+        .json({ message: "Create board failed", error: message });
+    }
+  };
+
+  public findBoardsByUserId = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const boards = await this.boardService.findBoardsByUserId(req.user.id);
+      res.status(201).json(boards);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res
+        .status(400)
+        .json({ message: "Find boards by user id failed", error: message });
+    }
+  };
+
+  public findBoardById = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const board = await this.boardService.findBoardById(
+        req.params.boardId,
+        req.user.id
+      );
+      res.status(201).json(board);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res
+        .status(400)
+        .json({ message: "Find board by id failed", error: message });
+    }
+  };
+}
