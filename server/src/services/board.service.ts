@@ -11,8 +11,23 @@ export class BoardService {
     id: string,
     userId: string
   ): Promise<Board | null> {
-    return await this.prisma.board.findUnique({
-      where: { id, userCreatorId: userId },
+    return await this.prisma.board.findFirst({
+      where: {
+        id,
+        userCreatorId: userId,
+      },
+      include: {
+        sections: {
+          include: {
+            tasks: {
+              include: {
+                assigned: true,
+                creator: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 

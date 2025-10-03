@@ -9,7 +9,7 @@ import { useOutletContext } from "react-router";
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Task Tracker" },
-    { name: "description", content: "Welcome to Task Tracker!" },
+    { name: "Home", content: "Welcome to Task Tracker!" },
   ];
 }
 

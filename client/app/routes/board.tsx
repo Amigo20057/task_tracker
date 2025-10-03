@@ -1,32 +1,19 @@
 import type { Route } from "./+types/board";
-import { Boards } from "~/consts";
 import Task from "~/components/ui/task";
 import { DndContext } from "@dnd-kit/core";
+import { useBoard } from "~/hooks/board/useBoard";
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Board" },
-    { name: "description", content: "Task Tracker Board" },
-  ];
+  return [{ title: "Board" }, { name: "Board", content: "Task Tracker Board" }];
 }
 
-export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  // const res = await fetch(`/api/boards/${params.boardId}`);
-  // const product: IBoard = await res.json();
-  // return product;
-  return params.boardId;
-}
+export default function Board({ params }: Route.ComponentProps) {
+  const { data: board, isLoading } = useBoard(params.boardId);
 
-export function HydrateFallback() {
-  return <div>Loading...</div>;
-}
-export default function Board({ loaderData }: Route.ComponentProps) {
-  const boardId = loaderData;
-  const board = Boards.find((b) => b.id === boardId);
+  if (isLoading) return <div>Loading...</div>;
+  if (!board) return <div>Board not found</div>;
 
-  if (!board) {
-    return <div>Board not found</div>;
-  }
+  console.log(board);
 
   return (
     <DndContext onDragEnd={(event) => console.log("Dropped:", event)}>

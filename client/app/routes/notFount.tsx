@@ -3,7 +3,7 @@ import type { Route } from "./+types/notFount";
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Task Tracker" },
-    { name: "description", content: "Welcome to Task Tracker!" },
+    { name: "Not found", content: "Welcome to Task Tracker!" },
   ];
 }
 
