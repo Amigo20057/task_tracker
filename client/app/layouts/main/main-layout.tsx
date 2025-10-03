@@ -10,6 +10,11 @@ export default function MainLayout() {
   const { data: userProfileData, isLoading: userIsLoading } = useProfile();
   const isAuth = !!userProfileData && !userIsLoading;
 
+  const context = {
+    user: userProfileData,
+    isAuth,
+  };
+
   return (
     <div className="min-h-screen w-full flex bg-[#191919] text-white">
       <SideBar />
@@ -21,7 +26,7 @@ export default function MainLayout() {
           name={data.name}
         />
         <main className="flex-1 p-4">
-          <Outlet />
+          <Outlet context={context} />
         </main>
       </div>
     </div>
