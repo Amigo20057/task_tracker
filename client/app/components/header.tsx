@@ -5,9 +5,10 @@ import { useLogout } from "~/hooks/user/mutation/useLogout";
 interface IProps {
   setSearchParam: (param: string) => void;
   isAuth: boolean;
+  name: string;
 }
 
-export default function Header({ setSearchParam, isAuth }: IProps) {
+export default function Header({ setSearchParam, isAuth, name }: IProps) {
   const { logoutMutation } = useLogout();
 
   const logout = () => {
@@ -33,10 +34,6 @@ export default function Header({ setSearchParam, isAuth }: IProps) {
           ""
         )}
         {isAuth ? (
-          // <Link
-          //   to="/profile"
-          //   className="w-[30px] h-[30px] rounded-full bg-[#565aee] ml-[20px]"
-          // ></Link>
           <button
             onClick={logout}
             className="w-[30px] h-[30px] rounded-full bg-[#565aee] ml-[20px]"

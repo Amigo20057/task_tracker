@@ -1,9 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
 export const useLogout = () => {
   const navigation = useNavigate();
+  const queryClient = useQueryClient();
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
@@ -14,6 +15,7 @@ export const useLogout = () => {
       );
     },
     onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ["profile"] });
       navigation("/auth/login");
     },
     onError: (error) => {
