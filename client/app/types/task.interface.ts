@@ -1,14 +1,14 @@
 import type { IBase } from "./base.interface";
 import type { IUser } from "./user.interface";
 
-type Accessability = "public" | "private";
+export type Accessability = "public" | "private";
 
 //P1 - Hight Priority
 //P2 - Medium Priority
 //P3 - Low Priority
-type Priority = "P1" | "P2" | "P3";
+export type Priority = "P1" | "P2" | "P3";
 
-type TaskType = "Task" | "Bag";
+export type TaskType = "Task" | "Bag";
 
 export interface IBoard extends IBase {
   name: string;
@@ -19,6 +19,7 @@ export interface IBoard extends IBase {
 }
 
 export interface ISectionBoard extends IBase {
+  boardId: string;
   name: string;
   tasksCount: number;
   color?: string;
@@ -26,6 +27,7 @@ export interface ISectionBoard extends IBase {
 }
 
 export interface ITask extends IBase {
+  sectionId: string;
   name: string;
   description?: string;
   creator: IUser;

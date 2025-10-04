@@ -1,10 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import type { Priority, TaskType } from "~/types/task.interface";
 
-export const useCreateTask = () => {
+export const useCreateTask = (boardId: string) => {
   const queryClient = useQueryClient();
   const createTaskMutation = useMutation({
-    mutationFn: async (data: { name: string; boardId: string }) => {
+    mutationFn: async (data: {
+      sectionId: string;
+      name: string;
+      taskType: TaskType;
+      deadline: Date;
+      priority: Priority;
+    }) => {
       return await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/boards/section/task/create`,
         data,
@@ -12,6 +19,7 @@ export const useCreateTask = () => {
       );
     },
     onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["boards", boardId] });
       queryClient.invalidateQueries({ queryKey: ["boards"] });
     },
     onError: async (error: any) => {

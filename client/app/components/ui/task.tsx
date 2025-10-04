@@ -28,38 +28,58 @@ export default function Task({
     PriorityColor.DEFAULT;
 
   const renderAssignedUsers = () => {
-    if (Array.isArray(assigned)) {
-      return assigned.map((el) => (
-        <div key={el.id} className="flex items-center gap-2">
-          <span
-            className={`w-6 h-6 rounded-full flex items-center justify-center text-[13px] font-bold text-white ${el.color}`}
-          >
-            {el.name[0]}
-          </span>
-          <span className="text-sm">{el.name}</span>
-        </div>
-      ));
-    }
+    return (
+      <div className="flex items-center gap-2 flex-wrap">
+        {Array.isArray(assigned) && assigned.length > 0 ? (
+          assigned.map((el) => (
+            <div key={el.id} className="flex items-center gap-2">
+              <span
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold text-white ${el.color}`}
+              >
+                {el.name[0]}
+              </span>
+            </div>
+          ))
+        ) : (
+          <></>
+        )}
 
-    if (assigned) {
-      return (
-        <div className="flex items-center gap-2">
-          <span
-            className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white ${assigned.color}`}
-          >
-            {assigned.name[0]}
-          </span>
-          <span className="text-sm">{assigned.name}</span>
+        {/* плюсик всегда */}
+        <div
+          className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center 
+                     text-white text-lg font-bold cursor-pointer hover:bg-white/20 transition"
+        >
+          +
         </div>
-      );
-    }
+      </div>
+    );
+  };
 
-    return null;
+  const renderDeadline = () => {
+    if (!deadline) return null;
+    const date = new Date(deadline);
+    const now = new Date();
+
+    const isOverdue = date < now;
+    const formatted = date.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short",
+    });
+
+    return (
+      <p
+        className={`mt-3 text-xs font-medium px-3 py-1 rounded-md w-fit
+          ${isOverdue ? "bg-red-500/70 text-white" : "bg-gray-700/70 text-gray-200"}
+        `}
+      >
+        📅 {formatted}
+      </p>
+    );
   };
 
   return (
     <div
-      className="bg-[#323231]/90 p-3 rounded-xl shadow-md 
+      className="bg-[#323231]/90 p-4 rounded-xl shadow-md 
              hover:shadow-xl hover:-translate-y-1 
              transition-all duration-200 text-white border border-white/10"
       style={style}
@@ -67,21 +87,26 @@ export default function Task({
       {...listeners}
       {...attributes}
     >
-      <h3 className="font-medium">{name}</h3>
+      <h3 className="font-medium mb-2">{name}</h3>
+
       <p
-        className={`mt-2 text-[12px] font-semibold px-3 py-1 rounded-full 
-              ${priorityColor} shadow-sm shadow-black/30`}
+        className={`text-[12px] font-semibold px-3 py-1 rounded-full 
+              ${priorityColor} shadow-sm shadow-black/30 w-fit`}
       >
         {priority}
       </p>
-      <div className="mt-2 flex flex-col gap-2">{renderAssignedUsers()}</div>
+
+      <div className="mt-3">{renderAssignedUsers()}</div>
+
       <p
-        className={`mt-2 text-[12px] font-semibold px-3 py-1 rounded-full 
+        className={`mt-3 text-[12px] font-semibold px-3 py-1 rounded-full w-fit
               ${taskType === "Task" ? "bg-[#3b82f6]/70" : "bg-[#ef4444]/70"} 
               shadow-sm shadow-black/30`}
       >
         {taskType}
       </p>
+
+      {renderDeadline()}
     </div>
   );
 }

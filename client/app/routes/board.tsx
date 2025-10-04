@@ -6,6 +6,7 @@ import { useState } from "react";
 import ModalCreateSection from "~/components/modals/createSection";
 import { Trash } from "lucide-react";
 import { useDeleteSection } from "~/hooks/board/mutation/useDeleteSection";
+import ModalCreateTask from "~/components/modals/createTask";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Board" }, { name: "Board", content: "Task Tracker Board" }];
@@ -15,6 +16,8 @@ export default function Board({ params }: Route.ComponentProps) {
   const { data: board, isLoading } = useBoard(params.boardId);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { createSectionMutation } = useDeleteSection(params.boardId);
+  const [isOpenModalCreateTask, setIsOpenModalCreateTask] = useState(false);
+  const [sectionId, setSectionId] = useState<undefined | string>(undefined);
 
   if (isLoading) return <div>Loading...</div>;
   if (!board) return <div>Board not found</div>;
@@ -64,11 +67,18 @@ export default function Board({ params }: Route.ComponentProps) {
                         priority={task.priority}
                         assigned={task.assigned}
                         taskType={task.taskType}
+                        deadline={task.deadline}
                       />
                     ))}
                   </div>
 
-                  <button className="mt-4 w-full bg-[#323231] cursor-pointer text-sm py-2 rounded-lg">
+                  <button
+                    onClick={() => {
+                      setSectionId(section.id);
+                      setIsOpenModalCreateTask(true);
+                    }}
+                    className="mt-4 w-full bg-[#323231] cursor-pointer text-sm py-2 rounded-lg"
+                  >
                     + Add task
                   </button>
                 </div>
@@ -89,6 +99,13 @@ export default function Board({ params }: Route.ComponentProps) {
         <ModalCreateSection
           setIsOpenModal={setIsOpenModal}
           boardId={params.boardId}
+        />
+      )}
+      {isOpenModalCreateTask && (
+        <ModalCreateTask
+          boardId={params.boardId}
+          sectionId={sectionId!}
+          setIsOpenModal={setIsOpenModalCreateTask}
         />
       )}
     </DndContext>

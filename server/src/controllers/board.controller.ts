@@ -114,6 +114,7 @@ export class BoardController {
       if (!req.user) return res.status(404).json({ message: "Unauthorized" });
       const task = await this.boardService.createTaskForSection(
         req.body,
+        req.params.boardId,
         req.user.id
       );
       res.status(201).json(task);

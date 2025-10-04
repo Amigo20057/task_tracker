@@ -128,16 +128,31 @@ export class BoardService {
       deadline: Date;
       priority: Priority;
     },
+    boardId: string,
     userId: string
   ): Promise<Task> {
+    const board = await this.findBoardById(boardId, userId);
+    if (!board) {
+      throw new Error("Board not found");
+    }
+    const section = await this.prisma.section.findUnique({
+      where: { id: task.sectionId },
+      include: { tasks: true },
+    });
+    if (!section) {
+      throw new Error("Section not found");
+    }
     return await this.prisma.task.create({
       data: {
-        sectionId: task.sectionId,
+        sectionId: section.id,
         name: task.name,
         taskType: task.taskType,
         deadline: task.deadline,
         priority: task.priority,
         creatorId: userId,
+        assigned: {
+          connect: [{ id: userId }],
+        },
       },
     });
   }

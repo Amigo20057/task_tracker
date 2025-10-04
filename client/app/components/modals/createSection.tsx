@@ -29,7 +29,7 @@ export default function ModalCreateSection({
                    transform transition-all duration-300 scale-100 hover:scale-[1.02]"
       >
         <h2 className="text-2xl font-semibold text-white mb-4 text-center">
-          Create new board
+          Create new Section
         </h2>
 
         <input
