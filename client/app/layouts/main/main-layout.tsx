@@ -17,7 +17,7 @@ export default function MainLayout() {
 
   return (
     <div className="min-h-screen w-full flex bg-[#191919] text-white">
-      <SideBar />
+      <SideBar isAuth={isAuth} />
 
       <div className="flex flex-col flex-1">
         <Header

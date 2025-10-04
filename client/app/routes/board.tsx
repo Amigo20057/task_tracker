@@ -2,6 +2,8 @@ import type { Route } from "./+types/board";
 import Task from "~/components/ui/task";
 import { DndContext } from "@dnd-kit/core";
 import { useBoard } from "~/hooks/board/useBoard";
+import { useState } from "react";
+import ModalCreateSection from "~/components/modals/createSection";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Board" }, { name: "Board", content: "Task Tracker Board" }];
@@ -9,6 +11,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Board({ params }: Route.ComponentProps) {
   const { data: board, isLoading } = useBoard(params.boardId);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   if (isLoading) return <div>Loading...</div>;
   if (!board) return <div>Board not found</div>;
@@ -51,8 +54,23 @@ export default function Board({ params }: Route.ComponentProps) {
                 </div>
               ))
             : ""}
+          <div
+            onClick={() => setIsOpenModal(true)}
+            className="w-72 h-[50px] bg-[#202020]/80 backdrop-blur-md 
+             rounded-2xl p-4 shadow-lg shadow-black/40 
+             flex flex-col border border-white/10 transition 
+             hover:shadow-xl  duration-200 justify-center text-[20px]"
+          >
+            New Section
+          </div>
         </div>
       </div>
+      {isOpenModal && (
+        <ModalCreateSection
+          setIsOpenModal={setIsOpenModal}
+          boardId={params.boardId}
+        />
+      )}
     </DndContext>
   );
 }

@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useCreateBoard = () => {
+export const useCreateTask = () => {
   const queryClient = useQueryClient();
-  const createBoardMutation = useMutation({
-    mutationFn: async (data: { name: string }) => {
+  const createTaskMutation = useMutation({
+    mutationFn: async (data: { name: string; boardId: string }) => {
       return await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/boards/create`,
+        `${import.meta.env.VITE_SERVER_URL}/boards/section/task/create`,
         data,
         { withCredentials: true }
       );
@@ -19,5 +19,5 @@ export const useCreateBoard = () => {
     },
   });
 
-  return { createBoardMutation };
+  return { createTaskMutation };
 };

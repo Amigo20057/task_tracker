@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import SideBarButton from "./ui/sideBarBtn";
 import { Calendar, File, List, MessageCircle, Users } from "lucide-react";
-import { Boards } from "~/consts";
+import { useBoards } from "~/hooks/board/useBoards";
+
+interface IProps {
+  isAuth: boolean;
+}
 
 interface IButtonsSideBar {
   name: string;
@@ -10,7 +14,8 @@ interface IButtonsSideBar {
   Icon: React.FC;
   nameSection?: string;
 }
-export default function SideBar() {
+export default function SideBar({ isAuth }: IProps) {
+  const { data: boards, isLoading } = useBoards({ isAuth });
   const location = useLocation();
   const [buttons, setButtons] = useState<IButtonsSideBar[]>([
     { name: "Home", path: "/", Icon: List },
@@ -21,16 +26,22 @@ export default function SideBar() {
   ]);
 
   useEffect(() => {
-    setButtons((prev) => [
-      ...prev,
-      ...Boards.map((b) => ({
-        nameSection: "Boards",
-        name: b.name,
-        path: `/board/${b.id}`,
-        Icon: List,
-      })),
-    ]);
-  }, []);
+    if (boards) {
+      setButtons((prev) => [
+        ...prev,
+        ...boards.map((b) => ({
+          nameSection: "Boards",
+          name: b.name,
+          path: `/board/${b.id}`,
+          Icon: List,
+        })),
+      ]);
+    }
+  }, [boards]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const grouped = buttons.reduce<Record<string, IButtonsSideBar[]>>(
     (acc, btn) => {

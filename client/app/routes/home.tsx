@@ -23,7 +23,7 @@ export default function Home() {
       {context.isAuth && (
         <div className="w-full mt-[50px] flex p-[0_200px]">
           <>
-            {data.map((board: Pick<IBoard, "id" | "name" | "updatedAt">) => (
+            {data?.map((board: Pick<IBoard, "id" | "name" | "updatedAt">) => (
               <MiniBoard
                 key={board.id}
                 id={board.id}

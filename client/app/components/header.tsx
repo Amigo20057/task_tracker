@@ -37,7 +37,9 @@ export default function Header({ setSearchParam, isAuth, name }: IProps) {
           <button
             onClick={logout}
             className="w-[30px] h-[30px] rounded-full bg-[#565aee] ml-[20px]"
-          ></button>
+          >
+            {name[0]}
+          </button>
         ) : (
           <>
             <Link
