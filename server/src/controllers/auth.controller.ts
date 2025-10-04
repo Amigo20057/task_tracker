@@ -21,7 +21,7 @@ export class AuthController {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return res
-        .status(400)
+        .status(500)
         .json({ message: "Register failed", error: message });
     }
   };
@@ -38,7 +38,7 @@ export class AuthController {
       return res.status(200).json({ user });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
-      return res.status(400).json({ message: "Login failed", error: message });
+      return res.status(500).json({ message: "Login failed", error: message });
     }
   };
 

@@ -55,6 +55,15 @@ export class BoardService {
     });
   }
 
+  public async deleteBoard(boardId: string, userId: string) {
+    return await this.prisma.board.delete({
+      where: {
+        userCreatorId: userId,
+        id: boardId,
+      },
+    });
+  }
+
   public async createSectionForBoard(
     boardId: string,
     name: string

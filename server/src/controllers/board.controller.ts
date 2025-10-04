@@ -13,8 +13,22 @@ export class BoardController {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return res
-        .status(400)
+        .status(500)
         .json({ message: "Create board failed", error: message });
+    }
+  };
+
+  public delete = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const boardId = req.params.boardId;
+      const board = await this.boardService.deleteBoard(boardId, req.user.id);
+      res.status(20).json(board);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res
+        .status(500)
+        .json({ message: "Delete board failed", error: message });
     }
   };
 
@@ -26,7 +40,7 @@ export class BoardController {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return res
-        .status(400)
+        .status(500)
         .json({ message: "Find boards by user id failed", error: message });
     }
   };
@@ -42,7 +56,7 @@ export class BoardController {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return res
-        .status(400)
+        .status(500)
         .json({ message: "Find board by id failed", error: message });
     }
   };
@@ -58,7 +72,7 @@ export class BoardController {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return res
-        .status(400)
+        .status(500)
         .json({ message: "Create section failed", error: message });
     }
   };
@@ -74,7 +88,7 @@ export class BoardController {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return res
-        .status(400)
+        .status(500)
         .json({ message: "Create task failed", error: message });
     }
   };

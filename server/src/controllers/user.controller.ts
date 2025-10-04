@@ -10,7 +10,7 @@ export class UserController {
       const user = await this.userService.profile((req as any).user.id);
       return res.status(200).json(user);
     } catch (error) {
-      return res.status(400).json({ message: "Get Profile failed", error });
+      return res.status(500).json({ message: "Get Profile failed", error });
     }
   };
 }
