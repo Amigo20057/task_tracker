@@ -64,6 +64,24 @@ export class BoardService {
     });
   }
 
+  public async updateBoard(
+    userId: string,
+    id: string,
+    { ...query }: Partial<Board>
+  ): Promise<Board> {
+    if (!id) throw new Error("Board ID is required");
+    const board = await this.prisma.board.findUnique({
+      where: { id },
+    });
+    if (!board || board.userCreatorId !== userId) {
+      throw new Error("Not authorized to update this board");
+    }
+    return await this.prisma.board.update({
+      where: { id },
+      data: { ...query },
+    });
+  }
+
   public async createSectionForBoard(
     boardId: string,
     name: string

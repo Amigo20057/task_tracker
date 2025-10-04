@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { MoreVertical } from "lucide-react";
 import { useState } from "react";
 import { useDeleteBoard } from "~/hooks/board/mutation/useDeleteBoard";
+import ModalUpdateNameBoard from "../modals/updateNameBoard";
 
 interface IProps {
   id: string;
@@ -13,6 +14,7 @@ export default function MiniBoard({ id, name, updatedAt }: IProps) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { deleteBoardMutation } = useDeleteBoard(id);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const handleDeleteBoard = () => {
     deleteBoardMutation.mutate();
@@ -45,7 +47,7 @@ export default function MiniBoard({ id, name, updatedAt }: IProps) {
         >
           <button
             onClick={() => {
-              console.log("Удалить доску:", id);
+              setIsOpenModal(true);
               setIsOpen(false);
             }}
             className="w-full text-left px-3 py-2 text-sm text-white hover:bg-[#3a3a3a] rounded-md"
@@ -65,6 +67,12 @@ export default function MiniBoard({ id, name, updatedAt }: IProps) {
       )}
 
       <p className="ml-[20px]">{name}</p>
+
+      <div onClick={(e) => e.stopPropagation()}>
+        {isOpenModal && (
+          <ModalUpdateNameBoard setIsOpenModal={setIsOpenModal} boardId={id} />
+        )}
+      </div>
     </div>
   );
 }

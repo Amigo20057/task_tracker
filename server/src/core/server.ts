@@ -48,7 +48,7 @@ export class Application {
     app.use(
       cors({
         origin: [this.config.get<string>("CLIENT_URL")],
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
         credentials: true,
       })
     );
@@ -72,6 +72,11 @@ export class Application {
       "/delete/:boardId",
       authMiddleware(this.config),
       this.boardController.deleteBoard
+    );
+    this.boardRouter.patch(
+      "/update",
+      authMiddleware(this.config),
+      this.boardController.updateBoard
     );
     this.boardRouter.get(
       "/by-id/:boardId",

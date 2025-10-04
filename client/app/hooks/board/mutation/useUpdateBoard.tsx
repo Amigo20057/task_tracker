@@ -1,15 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useNavigate } from "react-router";
+import type { IBoard } from "~/types/task.interface";
 
-export const useDeleteBoard = (boardId: string) => {
-  const navigation = useNavigate();
+export const useUpdateBoard = (boardId: string) => {
   const queryClient = useQueryClient();
-  const deleteBoardMutation = useMutation({
-    mutationFn: async () => {
-      await axios.delete(
-        `${import.meta.env.VITE_SERVER_URL}/boards/delete/${boardId}`,
+
+  const updateBoardMutation = useMutation({
+    mutationFn: async (updates: Partial<IBoard>) => {
+      return await axios.patch(
+        `${import.meta.env.VITE_SERVER_URL}/boards/update/`,
         {
+          boardId,
+        },
+        {
+          params: updates,
           withCredentials: true,
         }
       );
@@ -17,12 +21,11 @@ export const useDeleteBoard = (boardId: string) => {
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["boards"] });
       queryClient.invalidateQueries({ queryKey: ["board", boardId] });
-      navigation("/");
     },
     onError: async (error: any) => {
       console.log(error);
     },
   });
 
-  return { deleteBoardMutation };
+  return { updateBoardMutation };
 };
