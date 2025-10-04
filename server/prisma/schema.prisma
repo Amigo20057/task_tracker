@@ -27,7 +27,7 @@ model Board {
   id            String        @id @default(uuid())
   name          String
   accessability Accessability @default(public)
-  sections      Section[]
+  sections      Section[]     
   userCreator   User          @relation("UserCreatedBoards", fields: [userCreatorId], references: [id])
   userCreatorId String        @map("user_creator_id")
   users         User[]        @relation("BoardUsers")
@@ -40,9 +40,8 @@ model Board {
 model Section {
   id          String   @id @default(uuid())
   name        String
-  tasksCount  Int      @map("tasks_count") @default(0)
   color       String?  @default("BLACK")
-  board       Board    @relation(fields: [boardId], references: [id])
+  board       Board    @relation(fields: [boardId], references: [id], onDelete: Cascade) 
   boardId     String   @map("board_id")
   tasks       Task[]
   createdAt   DateTime @default(now()) @map("created_at")
@@ -61,13 +60,14 @@ model Task {
   creator     User     @relation("CreatedTasks", fields: [creatorId], references: [id])
   creatorId   String   @map("creator_id")
   assigned    User[]   @relation("AssignedTasks")
-  section     Section  @relation(fields: [sectionId], references: [id])
+  section     Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade) 
   sectionId   String   @map("section_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   
   @@map("tasks")
 }
+
 
 enum TaskType {
   Task
