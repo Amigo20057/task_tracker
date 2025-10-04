@@ -18,7 +18,7 @@ export class BoardController {
     }
   };
 
-  public delete = async (req: Request, res: Response) => {
+  public deleteBoard = async (req: Request, res: Response) => {
     try {
       if (!req.user) return res.status(404).json({ message: "Unauthorized" });
       const boardId = req.params.boardId;

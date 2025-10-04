@@ -68,11 +68,11 @@ export class Application {
       authMiddleware(this.config),
       this.boardController.create
     );
-    // this.boardRouter.delete(
-    //   "/delete",
-    //   authMiddleware(this.config),
-    //   this.boardController.delete
-    // );
+    this.boardRouter.delete(
+      "/delete/:boardId",
+      authMiddleware(this.config),
+      this.boardController.deleteBoard
+    );
     this.boardRouter.get(
       "/by-id/:boardId",
       authMiddleware(this.config),
