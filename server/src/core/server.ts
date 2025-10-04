@@ -78,6 +78,16 @@ export class Application {
       authMiddleware(this.config),
       this.boardController.findBoardsByUserId
     );
+    this.boardRouter.post(
+      "/section/create",
+      authMiddleware(this.config),
+      this.boardController.createSection
+    );
+    this.boardRouter.post(
+      "/section/task/create",
+      authMiddleware(this.config),
+      this.boardController.createTask
+    );
 
     app.use("/auth", this.authRouter);
     app.use("/users", this.userRouter);

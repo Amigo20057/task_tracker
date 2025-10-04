@@ -46,4 +46,36 @@ export class BoardController {
         .json({ message: "Find board by id failed", error: message });
     }
   };
+
+  public createSection = async (req: Request, res: Response) => {
+    try {
+      const { boardId, name } = req.body;
+      const section = await this.boardService.createSectionForBoard(
+        boardId,
+        name
+      );
+      res.status(201).json(section);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res
+        .status(400)
+        .json({ message: "Create section failed", error: message });
+    }
+  };
+
+  public createTask = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const task = await this.boardService.createTaskForSection(
+        req.body,
+        req.user.id
+      );
+      res.status(201).json(task);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res
+        .status(400)
+        .json({ message: "Create task failed", error: message });
+    }
+  };
 }

@@ -1,4 +1,11 @@
-import { Board, PrismaClient } from "../generated/prisma";
+import {
+  Board,
+  Priority,
+  PrismaClient,
+  Section,
+  Task,
+  TaskType,
+} from "../generated/prisma";
 import prisma from "../prisma.client";
 
 export class BoardService {
@@ -44,6 +51,40 @@ export class BoardService {
       data: {
         name,
         userCreatorId: userId,
+      },
+    });
+  }
+
+  public async createSectionForBoard(
+    boardId: string,
+    name: string
+  ): Promise<Section> {
+    return await this.prisma.section.create({
+      data: {
+        boardId,
+        name,
+      },
+    });
+  }
+
+  public async createTaskForSection(
+    task: {
+      sectionId: string;
+      name: string;
+      taskType: TaskType;
+      deadline: Date;
+      priority: Priority;
+    },
+    userId: string
+  ): Promise<Task> {
+    return await this.prisma.task.create({
+      data: {
+        sectionId: task.sectionId,
+        name: task.name,
+        taskType: task.taskType,
+        deadline: task.deadline,
+        priority: task.priority,
+        creatorId: userId,
       },
     });
   }
