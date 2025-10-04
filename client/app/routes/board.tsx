@@ -4,6 +4,8 @@ import { DndContext } from "@dnd-kit/core";
 import { useBoard } from "~/hooks/board/useBoard";
 import { useState } from "react";
 import ModalCreateSection from "~/components/modals/createSection";
+import { Trash } from "lucide-react";
+import { useDeleteSection } from "~/hooks/board/mutation/useDeleteSection";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Board" }, { name: "Board", content: "Task Tracker Board" }];
@@ -12,9 +14,18 @@ export function meta({}: Route.MetaArgs) {
 export default function Board({ params }: Route.ComponentProps) {
   const { data: board, isLoading } = useBoard(params.boardId);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const { createSectionMutation } = useDeleteSection(params.boardId);
 
   if (isLoading) return <div>Loading...</div>;
   if (!board) return <div>Board not found</div>;
+
+  const handleDeleteSection = (sectionId: string) => {
+    const data = {
+      boardId: params.boardId,
+      sectionId: sectionId,
+    };
+    createSectionMutation.mutate(data);
+  };
 
   console.log(board);
 
@@ -33,7 +44,16 @@ export default function Board({ params }: Route.ComponentProps) {
              flex flex-col border border-white/10 transition 
              hover:shadow-xl  duration-200"
                 >
-                  <h2 className="text-lg font-semibold mb-3">{section.name}</h2>
+                  <div className="flex justify-between">
+                    <h2 className="text-lg font-semibold mb-3">
+                      {section.name}
+                    </h2>
+                    <Trash
+                      color="red"
+                      className="cursor-pointer"
+                      onClick={() => handleDeleteSection(section.id)}
+                    />
+                  </div>
 
                   <div className="space-y-3 flex-1">
                     {section.tasks.map((task) => (
@@ -56,7 +76,7 @@ export default function Board({ params }: Route.ComponentProps) {
             : ""}
           <div
             onClick={() => setIsOpenModal(true)}
-            className="w-72 h-[50px] bg-[#202020]/80 backdrop-blur-md 
+            className="w-72 h-[50px] bg-[#202020]/80 backdrop-blur-md cursor-pointer
              rounded-2xl p-4 shadow-lg shadow-black/40 
              flex flex-col border border-white/10 transition 
              hover:shadow-xl  duration-200 justify-center text-[20px]"

@@ -4,7 +4,7 @@ import type { IBoard } from "~/types/task.interface";
 
 export const useBoard = (boardId: string) => {
   return useQuery({
-    queryKey: ["board"],
+    queryKey: ["board", boardId],
     queryFn: async () => {
       return await axios.get<IBoard>(
         `${import.meta.env.VITE_SERVER_URL}/boards/by-id/${boardId}`,

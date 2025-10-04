@@ -76,6 +76,32 @@ export class BoardService {
     });
   }
 
+  public async deleteSection(
+    userId: string,
+    sectionId: string,
+    boardId: string
+  ): Promise<void> {
+    const board = await this.prisma.board.findFirst({
+      where: {
+        id: boardId,
+        userCreatorId: userId,
+      },
+    });
+    if (!board) {
+      throw new Error("Board not found");
+    }
+    const section = await this.prisma.section.findUnique({
+      where: { id: sectionId },
+      include: { tasks: true },
+    });
+    if (!section) {
+      throw new Error("Section not found");
+    }
+    await this.prisma.section.delete({
+      where: { id: section.id },
+    });
+  }
+
   public async createTaskForSection(
     task: {
       sectionId: string;

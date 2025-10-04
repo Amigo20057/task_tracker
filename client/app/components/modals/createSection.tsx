@@ -10,7 +10,7 @@ export default function ModalCreateSection({
   setIsOpenModal,
   boardId,
 }: IProps) {
-  const { createSectionMutation } = useCreateSection();
+  const { createSectionMutation } = useCreateSection({ boardId });
   const [name, setName] = useState<string>("");
 
   const handleCreateSection = () => {

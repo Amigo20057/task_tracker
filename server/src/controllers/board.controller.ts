@@ -23,7 +23,7 @@ export class BoardController {
       if (!req.user) return res.status(404).json({ message: "Unauthorized" });
       const boardId = req.params.boardId;
       const board = await this.boardService.deleteBoard(boardId, req.user.id);
-      res.status(20).json(board);
+      res.status(200).json(board);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return res
@@ -74,6 +74,20 @@ export class BoardController {
       return res
         .status(500)
         .json({ message: "Create section failed", error: message });
+    }
+  };
+
+  public deleteSection = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const { sectionId, boardId } = req.body;
+      await this.boardService.deleteSection(req.user.id, sectionId, boardId);
+      res.status(200).json({ success: true });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res
+        .status(500)
+        .json({ message: "Delete section failed", error: message });
     }
   };
 
