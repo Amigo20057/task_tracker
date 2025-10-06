@@ -104,14 +104,14 @@ export class Application {
       this.boardController.createTask
     );
     this.boardRouter.post(
-      "/invite-user",
+      "/:id/invite",
       authMiddleware(this.config),
-      this.boardController.inviteUserToBoard
+      this.boardController.createInviteLink
     );
-    this.boardRouter.get(
-      "/invited-users",
+    this.boardRouter.post(
+      "/join/:inviteId",
       authMiddleware(this.config),
-      this.boardController.getInvitedUsers
+      this.boardController.joinBoardByInvite
     );
 
     app.use("/auth", this.authRouter);

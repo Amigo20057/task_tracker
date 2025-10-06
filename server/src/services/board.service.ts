@@ -158,33 +158,48 @@ export class BoardService {
     });
   }
 
-  public async inviteUserToBoard(
+  public async createInviteLink(
     boardId: string,
-    invitedUserId: string,
     userId: string
-  ): Promise<void> {
-    const board = await this.findBoardById(boardId, userId);
+  ): Promise<{ inviteUrl: string }> {
+    const board = await this.prisma.board.findFirst({
+      where: { id: boardId, userCreatorId: userId },
+    });
     if (!board) throw new Error("Board not found");
-    await this.prisma.board.update({
-      where: {
-        id: board.id,
+    const invite = await this.prisma.boardInvite.create({
+      data: {
+        boardId: board.id,
+        createdById: userId,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
+    });
+    return {
+      inviteUrl: `${process.env.CLIENT_URL}/invite/${invite.id}`,
+    };
+  }
+
+  public async joinBoardByInvite(
+    inviteId: string,
+    userId: string
+  ): Promise<Board> {
+    const invite = await this.prisma.boardInvite.findUnique({
+      where: { id: inviteId },
+      include: { board: true },
+    });
+    if (!invite || !invite.isActive)
+      throw new Error("Invite not found or expired");
+    if (invite.expiresAt < new Date()) throw new Error("Invite expired");
+    await this.prisma.board.update({
+      where: { id: invite.boardId },
       data: {
         users: {
-          connect: { id: invitedUserId },
+          connect: { id: userId },
         },
       },
     });
-  }
-
-  public async getInvitedUsers(
-    userId: string,
-    boardId: string
-  ): Promise<User[] | null> {
-    const board = await this.prisma.board.findFirst({
-      where: { id: boardId, userCreatorId: userId },
-      include: { users: true },
+    await this.prisma.boardInvite.delete({
+      where: { id: inviteId },
     });
-    return board ? board.users : null;
+    return invite.board;
   }
 }

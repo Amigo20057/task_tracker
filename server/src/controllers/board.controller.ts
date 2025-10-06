@@ -126,40 +126,7 @@ export class BoardController {
     }
   };
 
-  public inviteUserToBoard = async (req: Request, res: Response) => {
-    try {
-      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
-      const { boardId, invitedUserId } = req.body;
-      await this.boardService.inviteUserToBoard(
-        boardId,
-        invitedUserId,
-        req.user.id
-      );
-      res.status(200).json({ success: true });
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      return res
-        .status(500)
-        .json({ message: "Invite user to board failed", error: message });
-    }
-  };
+  public createInviteLink = async (req: Request, res: Response) => {};
 
-  public getInvitedUsers = async (req: Request, res: Response) => {
-    try {
-      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
-      const users = await this.boardService.getInvitedUsers(
-        req.user.id,
-        req.params.id
-      );
-      res.status(200).json(users);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      return res
-        .status(500)
-        .json({
-          message: "Get users assigned to board failed",
-          error: message,
-        });
-    }
-  };
+  public joinBoardByInvite = async (req: Request, res: Response) => {};
 }
