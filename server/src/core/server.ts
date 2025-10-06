@@ -104,7 +104,7 @@ export class Application {
       this.boardController.createTask
     );
     this.boardRouter.post(
-      "/:id/invite",
+      "/:boardId/invite",
       authMiddleware(this.config),
       this.boardController.createInviteLink
     );
