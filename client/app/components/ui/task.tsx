@@ -34,7 +34,7 @@ export default function Task({
           assigned.map((el) => (
             <div key={el.id} className="flex items-center gap-2">
               <span
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold text-white ${el.color}`}
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold text-white bg-orange-600`}
               >
                 {el.name[0]}
               </span>
