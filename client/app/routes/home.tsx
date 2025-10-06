@@ -17,6 +17,7 @@ export default function Home() {
   const context = useOutletContext<Record<string, any>>();
   const { data } = useBoards(context.isAuth);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  console.log("DATA: ", data);
   return (
     <div className="w-full pt-[50px]">
       <h1 className="text-center text-[30px] font-semibold ">
@@ -25,14 +26,23 @@ export default function Home() {
       {context.isAuth && (
         <div className="w-full mt-[50px] flex p-[0_200px]">
           <>
-            {data?.map((board: Pick<IBoard, "id" | "name" | "updatedAt">) => (
-              <MiniBoard
-                key={board.id}
-                id={board.id}
-                name={board.name}
-                updatedAt={board.updatedAt}
-              />
-            ))}
+            {data?.map(
+              (
+                board: Pick<
+                  IBoard,
+                  "id" | "name" | "updatedAt" | "userCreatorId"
+                >
+              ) => (
+                <MiniBoard
+                  key={board.id}
+                  id={board.id}
+                  name={board.name}
+                  updatedAt={board.updatedAt}
+                  userCreatorId={board.userCreatorId}
+                  userId={context.user.id}
+                />
+              )
+            )}
             <button
               onClick={() => setIsOpenModal(true)}
               className="relative w-[150px] h-[150px] bg-[#252525] mr-[20px] flex justify-center rounded-[16px] items-center cursor-pointer border border-transparent text-[100px] hover:border hover:border-white/50 transition-all duration-300 ease-in-out"

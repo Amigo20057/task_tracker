@@ -12,7 +12,7 @@ export default function SideBarButton({ path, name, isActive, Icon }: IProps) {
   return (
     <Link
       to={`${path}`}
-      className={`pointer text-[15px] p-1 pt-[10px] pb-[10px] mb-1 rounded-[8px] pl-[10px] flex items-center
+      className={`pointer text-[15px] p-1 pt-[10px] pb-[10px] mb-1 rounded-[8px] pl-[10px] flex items-center hover:bg-[#56aaee3d] transition-colors duration-300
     ${isActive ? "bg-[#565aee]" : ""}`}
     >
       {Icon && <Icon className="inline-block mr-2" size={18} />} {name}

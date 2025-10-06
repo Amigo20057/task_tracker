@@ -27,18 +27,24 @@ export default function SideBar({ isAuth }: IProps) {
 
   useEffect(() => {
     if (boards) {
-      setButtons((prev) => [
-        ...prev,
-        ...boards.map((b) => ({
-          nameSection: "Boards",
-          name: b.name,
-          path: `/board/${b.id}`,
-          Icon: List,
-        })),
-      ]);
+      const mainButtons = [
+        { name: "Home", path: "/", Icon: List },
+        { name: "Users", path: "/users", Icon: Users },
+        { name: "Chats", path: "/chats", Icon: MessageCircle },
+        { name: "Documentations", path: "/documentation", Icon: File },
+        { name: "Calendar", path: "/calendar", Icon: Calendar },
+      ];
+
+      const boardButtons = boards.map((b) => ({
+        nameSection: "Boards",
+        name: b.name,
+        path: `/board/${b.id}`,
+        Icon: List,
+      }));
+
+      setButtons([...mainButtons, ...boardButtons]);
     }
   }, [boards]);
-
   if (isLoading) {
     return <div>Loading...</div>;
   }

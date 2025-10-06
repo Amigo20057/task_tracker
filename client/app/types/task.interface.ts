@@ -16,6 +16,7 @@ export interface IBoard extends IBase {
   userCreator: IUser;
   users: IUser[] | null;
   accessability: Accessability;
+  userCreatorId: string;
 }
 
 export interface ISectionBoard extends IBase {

@@ -15,6 +15,17 @@ export class BoardService {
     this.prisma = prisma;
   }
 
+  private async checkUserAccess(boardId: string, userId: string) {
+    const board = await this.prisma.board.findFirst({
+      where: {
+        id: boardId,
+        OR: [{ userCreatorId: userId }, { users: { some: { id: userId } } }],
+      },
+    });
+    if (!board) throw new Error("Not authorized or board not found");
+    return board;
+  }
+
   public async findBoardById(
     id: string,
     userId: string
@@ -22,7 +33,7 @@ export class BoardService {
     return await this.prisma.board.findFirst({
       where: {
         id,
-        userCreatorId: userId,
+        OR: [{ userCreatorId: userId }, { users: { some: { id: userId } } }],
       },
       include: {
         sections: {
@@ -35,6 +46,7 @@ export class BoardService {
             },
           },
         },
+        users: true,
       },
     });
   }
@@ -42,8 +54,9 @@ export class BoardService {
   public async findBoardsByUserId(userId: string): Promise<Board[] | null> {
     return await this.prisma.board.findMany({
       where: {
-        userCreatorId: userId,
+        OR: [{ userCreatorId: userId }, { users: { some: { id: userId } } }],
       },
+      include: { users: true },
     });
   }
 
@@ -85,8 +98,10 @@ export class BoardService {
 
   public async createSectionForBoard(
     boardId: string,
-    name: string
+    name: string,
+    userId: string
   ): Promise<Section> {
+    await this.checkUserAccess(boardId, userId);
     return await this.prisma.section.create({
       data: {
         boardId,
@@ -101,24 +116,11 @@ export class BoardService {
     boardId: string
   ): Promise<void> {
     const board = await this.prisma.board.findFirst({
-      where: {
-        id: boardId,
-        userCreatorId: userId,
-      },
+      where: { id: boardId, userCreatorId: userId },
     });
-    if (!board) {
-      throw new Error("Board not found");
-    }
-    const section = await this.prisma.section.findUnique({
-      where: { id: sectionId },
-      include: { tasks: true },
-    });
-    if (!section) {
-      throw new Error("Section not found");
-    }
-    await this.prisma.section.delete({
-      where: { id: section.id },
-    });
+    if (!board) throw new Error("Not authorized to delete this section");
+
+    await this.prisma.section.delete({ where: { id: sectionId } });
   }
 
   public async createTaskForSection(
@@ -132,20 +134,10 @@ export class BoardService {
     boardId: string,
     userId: string
   ): Promise<Task> {
-    const board = await this.findBoardById(boardId, userId);
-    if (!board) {
-      throw new Error("Board not found");
-    }
-    const section = await this.prisma.section.findUnique({
-      where: { id: task.sectionId },
-      include: { tasks: true },
-    });
-    if (!section) {
-      throw new Error("Section not found");
-    }
+    await this.checkUserAccess(boardId, userId);
     return await this.prisma.task.create({
       data: {
-        sectionId: section.id,
+        sectionId: task.sectionId,
         name: task.name,
         taskType: task.taskType,
         deadline: task.deadline,
@@ -162,10 +154,7 @@ export class BoardService {
     boardId: string,
     userId: string
   ): Promise<{ inviteUrl: string }> {
-    const board = await this.prisma.board.findFirst({
-      where: { id: boardId, userCreatorId: userId },
-    });
-    if (!board) throw new Error("Board not found");
+    const board = await this.checkUserAccess(boardId, userId); // проверка доступа
     const invite = await this.prisma.boardInvite.create({
       data: {
         boardId: board.id,
@@ -173,9 +162,7 @@ export class BoardService {
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
     });
-    return {
-      inviteUrl: `${process.env.CLIENT_URL}/invite/${invite.id}`,
-    };
+    return { inviteUrl: `${process.env.CLIENT_URL}/invite/${invite.id}` };
   }
 
   public async joinBoardByInvite(
@@ -197,9 +184,7 @@ export class BoardService {
         },
       },
     });
-    await this.prisma.boardInvite.delete({
-      where: { id: inviteId },
-    });
+    await this.prisma.boardInvite.delete({ where: { id: inviteId } });
     return invite.board;
   }
 }

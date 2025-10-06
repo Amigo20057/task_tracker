@@ -23,7 +23,7 @@ export default function MainLayout() {
         <Header
           isAuth={isAuth}
           setSearchParam={setSearchParam}
-          name={data.name}
+          name={context.user?.name ?? ""}
         />
         <main className="flex-1 p-4">
           <Outlet context={context} />
