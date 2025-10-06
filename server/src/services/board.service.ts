@@ -5,6 +5,7 @@ import {
   Section,
   Task,
   TaskType,
+  User,
 } from "../generated/prisma";
 import prisma from "../prisma.client";
 
@@ -155,5 +156,35 @@ export class BoardService {
         },
       },
     });
+  }
+
+  public async inviteUserToBoard(
+    boardId: string,
+    invitedUserId: string,
+    userId: string
+  ): Promise<void> {
+    const board = await this.findBoardById(boardId, userId);
+    if (!board) throw new Error("Board not found");
+    await this.prisma.board.update({
+      where: {
+        id: board.id,
+      },
+      data: {
+        users: {
+          connect: { id: invitedUserId },
+        },
+      },
+    });
+  }
+
+  public async getInvitedUsers(
+    userId: string,
+    boardId: string
+  ): Promise<User[] | null> {
+    const board = await this.prisma.board.findFirst({
+      where: { id: boardId, userCreatorId: userId },
+      include: { users: true },
+    });
+    return board ? board.users : null;
   }
 }
