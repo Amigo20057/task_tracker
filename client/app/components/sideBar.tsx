@@ -6,6 +6,7 @@ import { useBoards } from "~/hooks/board/useBoards";
 
 interface IProps {
   isAuth: boolean;
+  isCollapsed: boolean;
 }
 
 interface IButtonsSideBar {
@@ -14,7 +15,8 @@ interface IButtonsSideBar {
   Icon: React.FC;
   nameSection?: string;
 }
-export default function SideBar({ isAuth }: IProps) {
+
+export default function SideBar({ isAuth, isCollapsed }: IProps) {
   const { data: boards, isLoading } = useBoards({ isAuth });
   const location = useLocation();
   const [buttons, setButtons] = useState<IButtonsSideBar[]>([
@@ -41,8 +43,9 @@ export default function SideBar({ isAuth }: IProps) {
       setButtons([...mainButtons, ...boardButtons]);
     }
   }, [boards]);
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   const grouped = buttons.reduce<Record<string, IButtonsSideBar[]>>(
@@ -56,19 +59,32 @@ export default function SideBar({ isAuth }: IProps) {
   );
 
   return (
-    <aside className="w-[250px] bg-[#202020] h-screen relative left-0 p-[10px]">
-      <h2 className="text-center">Logo</h2>
+    <aside
+      className={`
+        bg-[#202020] h-screen relative left-0 p-[10px]
+        transition-all duration-300 ease-in-out
+        ${isCollapsed ? "w-[70px]" : "w-[250px]"}
+      `}
+    >
+      <h2
+        className={`text-center text-lg font-bold transition-opacity duration-300 ${
+          isCollapsed ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        Logo
+      </h2>
+
       <div className="mt-[10px] flex flex-col pt-[20px]">
         {Object.entries(grouped).map(([section, items]) => (
           <div key={section} className="mb-4">
-            {section !== "Main" && (
-              <div className="text-[15px] text-gray-400 mb-2">{section}</div>
+            {!isCollapsed && section !== "Main" && (
+              <div className="text-[15px] text-gray-400 mb-2 ">{section}</div>
             )}
             {items.map((el, index) => (
               <SideBarButton
                 key={index}
                 path={el.path}
-                name={el.name}
+                name={isCollapsed ? "" : el.name}
                 isActive={el.path === location.pathname}
                 Icon={el.Icon}
               />
