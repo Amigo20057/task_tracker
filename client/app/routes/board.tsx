@@ -59,13 +59,12 @@ export default function Board({ params }: Route.ComponentProps) {
                   </div>
 
                   <div className="space-y-3 flex-1">
-                    {section.tasks.map((task) => (
+                    {section.tasks?.map((task) => (
                       <Task
                         key={task.id}
                         id={task.id}
                         name={task.name}
                         priority={task.priority}
-                        assigned={task.assigned}
                         taskType={task.taskType}
                         deadline={task.deadline}
                       />

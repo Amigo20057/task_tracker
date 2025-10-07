@@ -52,7 +52,7 @@ export default function ModalUpdateNameBoard({
             className="px-4 py-2 rounded-lg bg-green-600 text-white font-medium
                        hover:bg-green-500 transition-all shadow-md"
           >
-            Create
+            Update
           </button>
         </div>
       </div>

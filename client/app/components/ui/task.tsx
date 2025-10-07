@@ -1,12 +1,11 @@
 import { useDraggable } from "@dnd-kit/core";
-import { PriorityColor } from "~/consts/colors";
-import type { ITask } from "~/types/task.interface";
+import { PriorityColor } from "~/constants/colors";
+import type { ITask } from "~/types/board.interface";
 import { CSS } from "@dnd-kit/utilities";
 
 export default function Task({
   id,
   name,
-  assigned,
   deadline,
   priority,
   taskType,
@@ -26,34 +25,6 @@ export default function Task({
   const priorityColor =
     PriorityColor[priority as keyof typeof PriorityColor] ??
     PriorityColor.DEFAULT;
-
-  const renderAssignedUsers = () => {
-    return (
-      <div className="flex items-center gap-2 flex-wrap">
-        {Array.isArray(assigned) && assigned.length > 0 ? (
-          assigned.map((el) => (
-            <div key={el.id} className="flex items-center gap-2">
-              <span
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold text-white bg-orange-600`}
-              >
-                {el.name[0]}
-              </span>
-            </div>
-          ))
-        ) : (
-          <></>
-        )}
-
-        {/* плюсик всегда */}
-        <div
-          className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center 
-                     text-white text-lg font-bold cursor-pointer hover:bg-white/20 transition"
-        >
-          +
-        </div>
-      </div>
-    );
-  };
 
   const renderDeadline = () => {
     if (!deadline) return null;
@@ -95,8 +66,6 @@ export default function Task({
       >
         {priority}
       </p>
-
-      <div className="mt-3">{renderAssignedUsers()}</div>
 
       <p
         className={`mt-3 text-[12px] font-semibold px-3 py-1 rounded-full w-fit

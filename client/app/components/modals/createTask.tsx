@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useCreateTask } from "~/hooks/board/mutation/useCreateTask";
-import type { Priority, TaskType } from "~/types/task.interface";
+import type { Priority, TaskType } from "~/types/board.interface";
 
 interface IProps {
   setIsOpenModal: (val: boolean) => void;

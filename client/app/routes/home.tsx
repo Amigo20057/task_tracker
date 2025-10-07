@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import type { IBoard } from "~/types/task.interface";
+import type { IBoard } from "~/types/board.interface";
 import MiniBoard from "~/components/ui/miniBoard";
 import { useState } from "react";
 import ModalCreateBoard from "~/components/modals/createBoard";

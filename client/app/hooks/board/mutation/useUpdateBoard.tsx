@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import type { IBoard } from "~/types/task.interface";
+import type { IBoard } from "~/types/board.interface";
 
 export const useUpdateBoard = (boardId: string) => {
   const queryClient = useQueryClient();

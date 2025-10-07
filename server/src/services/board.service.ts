@@ -5,7 +5,6 @@ import {
   Section,
   Task,
   TaskType,
-  User,
 } from "../generated/prisma";
 import prisma from "../prisma.client";
 
@@ -15,17 +14,6 @@ export class BoardService {
     this.prisma = prisma;
   }
 
-  private async checkUserAccess(boardId: string, userId: string) {
-    const board = await this.prisma.board.findFirst({
-      where: {
-        id: boardId,
-        OR: [{ userCreatorId: userId }, { users: { some: { id: userId } } }],
-      },
-    });
-    if (!board) throw new Error("Not authorized or board not found");
-    return board;
-  }
-
   public async findBoardById(
     id: string,
     userId: string
@@ -33,20 +21,18 @@ export class BoardService {
     return await this.prisma.board.findFirst({
       where: {
         id,
-        OR: [{ userCreatorId: userId }, { users: { some: { id: userId } } }],
+        userCreatorId: userId,
       },
       include: {
         sections: {
           include: {
             tasks: {
               include: {
-                assigned: true,
                 creator: true,
               },
             },
           },
         },
-        users: true,
       },
     });
   }
@@ -54,9 +40,8 @@ export class BoardService {
   public async findBoardsByUserId(userId: string): Promise<Board[] | null> {
     return await this.prisma.board.findMany({
       where: {
-        OR: [{ userCreatorId: userId }, { users: { some: { id: userId } } }],
+        userCreatorId: userId,
       },
-      include: { users: true },
     });
   }
 
@@ -98,10 +83,8 @@ export class BoardService {
 
   public async createSectionForBoard(
     boardId: string,
-    name: string,
-    userId: string
+    name: string
   ): Promise<Section> {
-    await this.checkUserAccess(boardId, userId);
     return await this.prisma.section.create({
       data: {
         boardId,
@@ -116,11 +99,24 @@ export class BoardService {
     boardId: string
   ): Promise<void> {
     const board = await this.prisma.board.findFirst({
-      where: { id: boardId, userCreatorId: userId },
+      where: {
+        id: boardId,
+        userCreatorId: userId,
+      },
     });
-    if (!board) throw new Error("Not authorized to delete this section");
-
-    await this.prisma.section.delete({ where: { id: sectionId } });
+    if (!board) {
+      throw new Error("Board not found");
+    }
+    const section = await this.prisma.section.findUnique({
+      where: { id: sectionId },
+      include: { tasks: true },
+    });
+    if (!section) {
+      throw new Error("Section not found");
+    }
+    await this.prisma.section.delete({
+      where: { id: section.id },
+    });
   }
 
   public async createTaskForSection(
@@ -134,57 +130,26 @@ export class BoardService {
     boardId: string,
     userId: string
   ): Promise<Task> {
-    await this.checkUserAccess(boardId, userId);
+    const board = await this.findBoardById(boardId, userId);
+    if (!board) {
+      throw new Error("Board not found");
+    }
+    const section = await this.prisma.section.findUnique({
+      where: { id: task.sectionId },
+      include: { tasks: true },
+    });
+    if (!section) {
+      throw new Error("Section not found");
+    }
     return await this.prisma.task.create({
       data: {
-        sectionId: task.sectionId,
+        sectionId: section.id,
         name: task.name,
         taskType: task.taskType,
         deadline: task.deadline,
         priority: task.priority,
         creatorId: userId,
-        assigned: {
-          connect: [{ id: userId }],
-        },
       },
     });
-  }
-
-  public async createInviteLink(
-    boardId: string,
-    userId: string
-  ): Promise<{ inviteUrl: string }> {
-    const board = await this.checkUserAccess(boardId, userId); // проверка доступа
-    const invite = await this.prisma.boardInvite.create({
-      data: {
-        boardId: board.id,
-        createdById: userId,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      },
-    });
-    return { inviteUrl: `${process.env.CLIENT_URL}/invite/${invite.id}` };
-  }
-
-  public async joinBoardByInvite(
-    inviteId: string,
-    userId: string
-  ): Promise<Board> {
-    const invite = await this.prisma.boardInvite.findUnique({
-      where: { id: inviteId },
-      include: { board: true },
-    });
-    if (!invite || !invite.isActive)
-      throw new Error("Invite not found or expired");
-    if (invite.expiresAt < new Date()) throw new Error("Invite expired");
-    await this.prisma.board.update({
-      where: { id: invite.boardId },
-      data: {
-        users: {
-          connect: { id: userId },
-        },
-      },
-    });
-    await this.prisma.boardInvite.delete({ where: { id: inviteId } });
-    return invite.board;
   }
 }

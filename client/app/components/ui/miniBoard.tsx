@@ -3,7 +3,6 @@ import { MoreVertical } from "lucide-react";
 import { useState } from "react";
 import { useDeleteBoard } from "~/hooks/board/mutation/useDeleteBoard";
 import ModalUpdateNameBoard from "../modals/updateNameBoard";
-import axios from "axios";
 
 interface IProps {
   id: string;
@@ -24,24 +23,9 @@ export default function MiniBoard({
   const [isOpen, setIsOpen] = useState(false);
   const { deleteBoardMutation } = useDeleteBoard(id);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const isUserCreator = userCreatorId === userId;
 
   const handleDeleteBoard = () => {
     deleteBoardMutation.mutate();
-  };
-
-  const handleInviteUser = async () => {
-    try {
-      const response = await axios.post<{ inviteUrl: string }>(
-        `${import.meta.env.VITE_SERVER_URL}/boards/${id}/invite`,
-        {},
-        { withCredentials: true }
-      );
-      const link = response.data.inviteUrl;
-      await navigator.clipboard.writeText(link);
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   return (
@@ -54,32 +38,21 @@ export default function MiniBoard({
     >
       <div className="w-full h-[50px] absolute rounded-t-[16px] top-0 bg-[#2c2c2c]"></div>
 
-      {isUserCreator && (
-        <div
-          className="absolute top-2 right-2 p-1 rounded-full hover:bg-[#3a3a3a] transition cursor-pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsOpen((prev) => !prev);
-          }}
-        >
-          <MoreVertical size={18} className="text-white" />
-        </div>
-      )}
+      <div
+        className="absolute top-2 right-2 p-1 rounded-full hover:bg-[#3a3a3a] transition cursor-pointer"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen((prev) => !prev);
+        }}
+      >
+        <MoreVertical size={18} className="text-white" />
+      </div>
 
       {isOpen && (
         <div
           className="absolute top-8 right-2 w-[150px] bg-[#2c2c2c] rounded-md shadow-md border border-white/10 z-20"
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            onClick={() => {
-              setIsOpen(false);
-              handleInviteUser();
-            }}
-            className="w-full text-left px-3 py-2 text-sm text-white hover:bg-[#3a3a3a] rounded-md"
-          >
-            Запросити
-          </button>
           <button
             onClick={() => {
               setIsOpenModal(true);

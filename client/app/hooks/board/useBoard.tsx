@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import type { IBoard } from "~/types/task.interface";
+import type { IBoard } from "~/types/board.interface";
 
 export const useBoard = (boardId: string) => {
   return useQuery({

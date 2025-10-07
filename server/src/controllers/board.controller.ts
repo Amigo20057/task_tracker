@@ -125,36 +125,4 @@ export class BoardController {
         .json({ message: "Create task failed", error: message });
     }
   };
-
-  public createInviteLink = async (req: Request, res: Response) => {
-    try {
-      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
-      const link = await this.boardService.createInviteLink(
-        req.params.boardId,
-        req.user.id
-      );
-      res.status(201).json(link);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      return res
-        .status(500)
-        .json({ message: "Create invite link failed", error: message });
-    }
-  };
-
-  public joinBoardByInvite = async (req: Request, res: Response) => {
-    try {
-      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
-      const board = await this.boardService.joinBoardByInvite(
-        req.params.inviteId,
-        req.user.id
-      );
-      res.status(200).json(board);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      return res
-        .status(500)
-        .json({ message: "Join to board failed", error: message });
-    }
-  };
 }

@@ -103,16 +103,6 @@ export class Application {
       authMiddleware(this.config),
       this.boardController.createTask
     );
-    this.boardRouter.post(
-      "/:boardId/invite",
-      authMiddleware(this.config),
-      this.boardController.createInviteLink
-    );
-    this.boardRouter.post(
-      "/join/:inviteId",
-      authMiddleware(this.config),
-      this.boardController.joinBoardByInvite
-    );
 
     app.use("/auth", this.authRouter);
     app.use("/users", this.userRouter);

@@ -14,10 +14,7 @@ model User {
   email          String   @unique
   password       String
   createdBoards  Board[]  @relation("UserCreatedBoards")
-  boards         Board[]  @relation("BoardUsers")
   createdTasks   Task[]   @relation("CreatedTasks")
-  assignedTasks  Task[]   @relation("AssignedTasks")
-  boardInvite   BoardInvite[]
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
   
@@ -27,12 +24,9 @@ model User {
 model Board {
   id            String        @id @default(uuid())
   name          String
-  accessability Accessability @default(public)
   sections      Section[]     
   userCreator   User          @relation("UserCreatedBoards", fields: [userCreatorId], references: [id])
   userCreatorId String        @map("user_creator_id")
-  users         User[]        @relation("BoardUsers")
-  invites       BoardInvite[] 
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime      @updatedAt @map("updated_at")
   
@@ -61,7 +55,6 @@ model Task {
   priority    Priority
   creator     User     @relation("CreatedTasks", fields: [creatorId], references: [id])
   creatorId   String   @map("creator_id")
-  assigned    User[]   @relation("AssignedTasks")
   section     Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade) 
   sectionId   String   @map("section_id")
   createdAt   DateTime @default(now()) @map("created_at")
@@ -69,20 +62,6 @@ model Task {
   
   @@map("tasks")
 }
-
-model BoardInvite {
-  id          String   @id @default(uuid())
-  board       Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  boardId     String   @map("board_id")
-  createdBy   User     @relation(fields: [createdById], references: [id])
-  createdById String   @map("created_by_id")
-  createdAt   DateTime @default(now()) @map("created_at")
-  expiresAt   DateTime @default(now())
-  isActive    Boolean  @default(true)
-
-  @@map("board_invites")
-}
-
 
 enum TaskType {
   Task
@@ -93,9 +72,4 @@ enum Priority {
   P1
   P2
   P3
-}
-
-enum Accessability {
-  public
-  private
 }
