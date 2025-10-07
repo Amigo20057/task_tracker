@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import SideBarButton from "./ui/sideBarBtn";
-import { Calendar, File, List, MessageCircle, Users } from "lucide-react";
+import { Calendar, File, List } from "lucide-react";
 import { useBoards } from "~/hooks/board/useBoards";
 
 interface IProps {
@@ -19,8 +19,6 @@ export default function SideBar({ isAuth }: IProps) {
   const location = useLocation();
   const [buttons, setButtons] = useState<IButtonsSideBar[]>([
     { name: "Home", path: "/", Icon: List },
-    { name: "Users", path: "/users", Icon: Users },
-    { name: "Chats", path: "/chats", Icon: MessageCircle },
     { name: "Documentations", path: "/documentation", Icon: File },
     { name: "Calendar", path: "/calendar", Icon: Calendar },
   ]);
@@ -29,8 +27,6 @@ export default function SideBar({ isAuth }: IProps) {
     if (boards) {
       const mainButtons = [
         { name: "Home", path: "/", Icon: List },
-        { name: "Users", path: "/users", Icon: Users },
-        { name: "Chats", path: "/chats", Icon: MessageCircle },
         { name: "Documentations", path: "/documentation", Icon: File },
         { name: "Calendar", path: "/calendar", Icon: Calendar },
       ];

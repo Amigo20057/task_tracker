@@ -16,6 +16,7 @@ export const useLogout = () => {
     },
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: ["profile"] });
+      queryClient.removeQueries({ queryKey: ["boards"] });
       navigation("/auth/login");
     },
     onError: (error) => {
