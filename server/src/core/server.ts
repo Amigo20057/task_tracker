@@ -103,6 +103,11 @@ export class Application {
       authMiddleware(this.config),
       this.boardController.createTask
     );
+    this.boardRouter.post(
+      "/section/task/switch",
+      authMiddleware(this.config),
+      this.boardController.switchTaskAnotherSection
+    );
 
     app.use("/auth", this.authRouter);
     app.use("/users", this.userRouter);

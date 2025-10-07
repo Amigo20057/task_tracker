@@ -125,4 +125,21 @@ export class BoardController {
         .json({ message: "Create task failed", error: message });
     }
   };
+
+  public switchTaskAnotherSection = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const task = await this.boardService.switchTaskAnotherSection(
+        req.user.id,
+        req.body
+      );
+      res.status(200).json(task);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res.status(500).json({
+        message: "Switch task another section failed",
+        error: message,
+      });
+    }
+  };
 }

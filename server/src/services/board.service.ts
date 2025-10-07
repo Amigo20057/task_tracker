@@ -152,4 +152,42 @@ export class BoardService {
       },
     });
   }
+
+  public async switchTaskAnotherSection(
+    userId: string,
+    data: {
+      boardId: string;
+      oldSectionId: string;
+      newSectionId: string;
+      taskId: string;
+    }
+  ): Promise<Task> {
+    const { boardId, oldSectionId, newSectionId, taskId } = data;
+    const board = await this.prisma.board.findFirst({
+      where: { id: boardId, userCreatorId: userId },
+    });
+    if (!board) {
+      throw new Error("Board not found or not authorized");
+    }
+    const task = await this.prisma.task.findFirst({
+      where: {
+        id: taskId,
+        sectionId: oldSectionId,
+      },
+    });
+    if (!task) {
+      throw new Error("Task not found in the specified old section");
+    }
+    const newSection = await this.prisma.section.findFirst({
+      where: { id: newSectionId, boardId },
+    });
+    if (!newSection) {
+      throw new Error("New section not found in this board");
+    }
+    const updatedTask = await this.prisma.task.update({
+      where: { id: taskId },
+      data: { sectionId: newSectionId },
+    });
+    return updatedTask;
+  }
 }
