@@ -1,26 +1,55 @@
 import type { Route } from "./+types/board";
-import Task from "~/components/ui/task";
 import { DndContext } from "@dnd-kit/core";
 import { useBoard } from "~/hooks/board/useBoard";
 import { useState } from "react";
 import ModalCreateSection from "~/components/modals/createSection";
-import { Trash } from "lucide-react";
 import { useDeleteSection } from "~/hooks/board/mutation/useDeleteSection";
 import ModalCreateTask from "~/components/modals/createTask";
+import Section from "~/components/ui/section";
+import { useSwitchTaskSection } from "~/hooks/board/mutation/useSwitchTaskSection";
+import ModalUpdateNameSection from "~/components/modals/updateNameSection";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Board" }, { name: "Board", content: "Task Tracker Board" }];
 }
 
 export default function Board({ params }: Route.ComponentProps) {
-  const { data: board, isLoading } = useBoard(params.boardId);
+  const { data: board, isLoading, refetch } = useBoard(params.boardId);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { createSectionMutation } = useDeleteSection(params.boardId);
   const [isOpenModalCreateTask, setIsOpenModalCreateTask] = useState(false);
+  const [isOpenModalUpdateSectionName, setIsOpenUpdateSectionName] =
+    useState(false);
   const [sectionId, setSectionId] = useState<undefined | string>(undefined);
+  const { mutateAsync: switchTask } = useSwitchTaskSection(params.boardId);
 
   if (isLoading) return <div>Loading...</div>;
   if (!board) return <div>Board not found</div>;
+
+  const handleDragEnd = async (event: any) => {
+    const { active, over } = event;
+
+    if (!over || !active) return;
+    if (active.id === over.id) return;
+
+    const taskId = active.id;
+    const newSectionId = over.id;
+
+    const oldSection = board?.sections?.find((s) =>
+      s.tasks?.some((t) => t.id === taskId)
+    );
+    if (!oldSection) return;
+
+    if (oldSection.id !== newSectionId) {
+      await switchTask({
+        boardId: params.boardId,
+        oldSectionId: oldSection.id,
+        newSectionId,
+        taskId,
+      });
+      await refetch();
+    }
+  };
 
   const handleDeleteSection = (sectionId: string) => {
     const data = {
@@ -30,57 +59,27 @@ export default function Board({ params }: Route.ComponentProps) {
     createSectionMutation.mutate(data);
   };
 
-  console.log(board);
-
   return (
-    <DndContext onDragEnd={(event) => console.log("Dropped:", event)}>
+    <DndContext onDragEnd={handleDragEnd}>
       <div className="p-6 flex flex-col h-full bg-gradient-to-br from-[#1a1a1a] via-[#222] to-[#2c2c2c] text-white">
         <h1 className="text-3xl font-bold mb-6">{board.name}</h1>
 
         <div className="flex gap-6 overflow-x-auto flex-1">
           {board.sections
             ? board.sections.map((section) => (
-                <div
+                <Section
                   key={section.id}
-                  className="w-72 flex-shrink-0 bg-[#202020]/80 backdrop-blur-md 
-             rounded-2xl p-4 shadow-lg shadow-black/40 
-             flex flex-col border border-white/10 transition 
-             hover:shadow-xl  duration-200"
-                >
-                  <div className="flex justify-between">
-                    <h2 className="text-lg font-semibold mb-3">
-                      {section.name}
-                    </h2>
-                    <Trash
-                      color="red"
-                      className="cursor-pointer"
-                      onClick={() => handleDeleteSection(section.id)}
-                    />
-                  </div>
-
-                  <div className="space-y-3 flex-1">
-                    {section.tasks?.map((task) => (
-                      <Task
-                        key={task.id}
-                        id={task.id}
-                        name={task.name}
-                        priority={task.priority}
-                        taskType={task.taskType}
-                        deadline={task.deadline}
-                      />
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      setSectionId(section.id);
-                      setIsOpenModalCreateTask(true);
-                    }}
-                    className="mt-4 w-full bg-[#323231] cursor-pointer text-sm py-2 rounded-lg"
-                  >
-                    + Add task
-                  </button>
-                </div>
+                  section={section}
+                  onAddTask={(id: string) => {
+                    setSectionId(id);
+                    setIsOpenModalCreateTask(true);
+                  }}
+                  onUpdateSectionName={(id: string) => {
+                    setSectionId(id);
+                    setIsOpenUpdateSectionName(true);
+                  }}
+                  onDeleteSection={handleDeleteSection}
+                />
               ))
             : ""}
           <div
@@ -105,6 +104,14 @@ export default function Board({ params }: Route.ComponentProps) {
           boardId={params.boardId}
           sectionId={sectionId!}
           setIsOpenModal={setIsOpenModalCreateTask}
+          refetch={refetch}
+        />
+      )}
+      {isOpenModalUpdateSectionName && (
+        <ModalUpdateNameSection
+          boardId={params.boardId}
+          sectionId={sectionId!}
+          setIsOpenModal={setIsOpenUpdateSectionName}
         />
       )}
     </DndContext>

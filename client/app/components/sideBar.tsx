@@ -61,7 +61,7 @@ export default function SideBar({ isAuth, isCollapsed }: IProps) {
   return (
     <aside
       className={`
-        bg-[#202020] h-screen relative left-0 p-[10px]
+        bg-[#202020] h-full relative left-0 p-[10px]
         transition-all duration-300 ease-in-out
         ${isCollapsed ? "w-[70px]" : "w-[250px]"}
       `}

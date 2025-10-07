@@ -1,19 +1,25 @@
 import { useState } from "react";
-import { useCreateBoard } from "~/hooks/board/mutation/useCreateBoard";
+import { useUpdateSection } from "~/hooks/board/mutation/useUpdateSection";
 
 interface IProps {
   setIsOpenModal: (val: boolean) => void;
+  sectionId: string;
+  boardId: string;
 }
 
-export default function ModalCreateBoard({ setIsOpenModal }: IProps) {
-  const { createBoardMutation } = useCreateBoard();
+export default function ModalUpdateNameSection({
+  setIsOpenModal,
+  sectionId,
+  boardId,
+}: IProps) {
+  const { updateSectionMutation } = useUpdateSection(boardId, sectionId);
   const [name, setName] = useState<string>("");
 
-  const handleCreateBoard = () => {
+  const handleUpdateBoardName = () => {
     const data = {
       name,
     };
-    createBoardMutation.mutate(data);
+    updateSectionMutation.mutate(data);
     setIsOpenModal(false);
   };
 
@@ -24,13 +30,13 @@ export default function ModalCreateBoard({ setIsOpenModal }: IProps) {
                    transform transition-all duration-300 scale-100 hover:scale-[1.02]"
       >
         <h2 className="text-2xl font-semibold text-white mb-4 text-center">
-          Create new board
+          New name
         </h2>
 
         <input
           onChange={(val) => setName(val.target.value)}
           type="text"
-          placeholder="Enter board name..."
+          placeholder="Enter new section name..."
           className="w-full rounded-lg bg-[#2a2a2a] text-white px-4 py-2 mb-6 
                      border border-transparent focus:border-white/30 focus:outline-none"
         />
@@ -44,11 +50,11 @@ export default function ModalCreateBoard({ setIsOpenModal }: IProps) {
             Cancel
           </button>
           <button
-            onClick={handleCreateBoard}
+            onClick={handleUpdateBoardName}
             className="px-4 py-2 rounded-lg bg-green-600 text-white font-medium
                        hover:bg-green-500 transition-all shadow-md"
           >
-            Create
+            Update
           </button>
         </div>
       </div>

@@ -6,12 +6,14 @@ interface IProps {
   setIsOpenModal: (val: boolean) => void;
   sectionId: string;
   boardId: string;
+  refetch: () => void;
 }
 
 export default function ModalCreateTask({
   setIsOpenModal,
   sectionId,
   boardId,
+  refetch,
 }: IProps) {
   const { createTaskMutation } = useCreateTask(boardId);
   const [name, setName] = useState<string>("");
@@ -19,7 +21,7 @@ export default function ModalCreateTask({
   const [deadline, setDeadline] = useState<Date>(new Date());
   const [priority, setPriority] = useState<Priority>("P1");
 
-  const handleCreateTask = () => {
+  const handleCreateTask = async () => {
     const data = {
       name,
       sectionId,
@@ -27,12 +29,17 @@ export default function ModalCreateTask({
       deadline,
       priority,
     };
-    createTaskMutation.mutate(data);
-    setIsOpenModal(false);
+    try {
+      await createTaskMutation.mutateAsync(data);
+      await refetch();
+      setIsOpenModal(false);
+    } catch (err) {
+      console.error("Error creating task:", err);
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-99999 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div
         className="w-[500px] max-w-[90%] rounded-2xl bg-[#1c1c1c] p-6 shadow-2xl 
                       transform transition-all duration-300 scale-100 hover:scale-[1.02]"

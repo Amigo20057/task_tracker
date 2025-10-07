@@ -17,11 +17,11 @@ export default function Task({
 
   const style = {
     transform: CSS.Translate.toString(transform),
-    opacity: isDragging ? 0.6 : 1,
+    opacity: isDragging ? 0.7 : 1,
     cursor: "grab",
+    zIndex: isDragging ? 9999 : "auto",
     transition: "transform 0.15s ease, opacity 0.15s ease",
   };
-
   const priorityColor =
     PriorityColor[priority as keyof typeof PriorityColor] ??
     PriorityColor.DEFAULT;

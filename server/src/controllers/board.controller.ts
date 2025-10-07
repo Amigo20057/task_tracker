@@ -50,6 +50,25 @@ export class BoardController {
     }
   };
 
+  public updateSection = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const { boardId, sectionId } = req.body;
+      const updatedSection = await this.boardService.UpdateSection(
+        req.user.id,
+        boardId,
+        sectionId,
+        req.query
+      );
+      res.status(200).json(updatedSection);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res
+        .status(500)
+        .json({ message: "Update section failed", error: message });
+    }
+  };
+
   public findBoardsByUserId = async (req: Request, res: Response) => {
     try {
       if (!req.user) return res.status(404).json({ message: "Unauthorized" });

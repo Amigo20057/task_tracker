@@ -108,6 +108,11 @@ export class Application {
       authMiddleware(this.config),
       this.boardController.switchTaskAnotherSection
     );
+    this.boardRouter.patch(
+      "/section/update",
+      authMiddleware(this.config),
+      this.boardController.updateSection
+    );
 
     app.use("/auth", this.authRouter);
     app.use("/users", this.userRouter);
