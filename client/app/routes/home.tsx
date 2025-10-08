@@ -73,7 +73,7 @@ export default function Home() {
               to="/auth/register"
               className="px-8 py-3 bg-transparent border border-gray-500 hover:border-white text-white rounded-2xl text-[18px] transition-all duration-300"
             >
-              Зарегистрироваться
+              Зареєструватися
             </Link>
           </div>
           <div className="mt-[100px] opacity-40 flex flex-wrap justify-center gap-8">

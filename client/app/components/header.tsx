@@ -35,7 +35,7 @@ export default function Header({
           <Search size={18} />
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Пошук"
             onChange={(e) => setSearchParam(e.target.value)}
             className="outline-none ml-[10px] w-full bg-transparent"
           />
@@ -61,13 +61,13 @@ export default function Header({
               className="ml-[20px] mr-[10px] h-[30px] pointer text-[15px] p-2 rounded-[8px] pl-[10px] flex items-center bg-[#565aee]"
               to="/auth/register"
             >
-              Register
+              Реєстрація
             </Link>
             <Link
               to="/auth/login"
               className="h-[30px] pointer text-[15px] p-2 rounded-[8px] pl-[10px] flex items-center bg-[#565aee]"
             >
-              Login
+              Логін
             </Link>
           </>
         )}
