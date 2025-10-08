@@ -3,11 +3,11 @@ import { useNavigation } from "react-router";
 
 export default function GlobalLoadingSpinner() {
   const isMutating = useIsMutating();
-  const isFetching = useIsFetching();
-  const navigation = useNavigation();
-
-  const isLoading =
-    isMutating > 0 || isFetching > 0 || navigation.state === "loading";
+  // const isFetching = useIsFetching();
+  // const navigation = useNavigation();
+  //MAYBE REMOVE SPINNER EVENT FROM [SWITCHTASKS, CREATETASKS]
+  const isLoading = isMutating > 0;
+  // isMutating > 0 || isFetching > 0 || navigation.state === "loading";
 
   if (!isLoading) return null;
 
