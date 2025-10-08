@@ -113,6 +113,11 @@ export class Application {
       authMiddleware(this.config),
       this.boardController.updateSection
     );
+    this.boardRouter.delete(
+      `/section/task/:taskId`,
+      authMiddleware(this.config),
+      this.boardController.deleteTask
+    );
 
     app.use("/auth", this.authRouter);
     app.use("/users", this.userRouter);

@@ -161,4 +161,17 @@ export class BoardController {
       });
     }
   };
+
+  public deleteTask = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      await this.boardService.deleteTask(req.params.taskId, req.user.id);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res.status(500).json({
+        message: "Delete task failed",
+        error: message,
+      });
+    }
+  };
 }

@@ -222,4 +222,20 @@ export class BoardService {
     });
     return updatedTask;
   }
+
+  public async deleteTask(taskId: string, userId: string): Promise<void> {
+    const task = await this.prisma.task.findFirst({
+      where: {
+        id: taskId,
+        creatorId: userId,
+      },
+    });
+    if (!task) throw new Error("Task not found");
+    await this.prisma.task.delete({
+      where: {
+        id: taskId,
+        creatorId: userId,
+      },
+    });
+  }
 }
