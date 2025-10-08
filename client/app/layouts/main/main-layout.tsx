@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { data, Outlet, useNavigate } from "react-router";
 import Header from "~/components/header";
 import SideBar from "~/components/sideBar";
+import GlobalLoadingSpinner from "~/components/ui/globalLoadingSpinner";
 import { useProfile } from "~/hooks/user/userProfile";
 
 export default function MainLayout() {
@@ -27,6 +28,7 @@ export default function MainLayout() {
           toggleSidebar={() => setIsCollapsed((p) => !p)}
         />
         <main className="flex-1 p-4">
+          <GlobalLoadingSpinner />
           <Outlet context={context} />
         </main>
       </div>

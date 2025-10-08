@@ -8,6 +8,8 @@ import ModalCreateTask from "~/components/modals/createTask";
 import Section from "~/components/ui/section";
 import { useSwitchTaskSection } from "~/hooks/board/mutation/useSwitchTaskSection";
 import ModalUpdateNameSection from "~/components/modals/updateNameSection";
+import ModalFullTask from "~/components/modals/fullTask";
+import type { ITask } from "~/types/board.interface";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Board" }, { name: "Board", content: "Task Tracker Board" }];
@@ -20,10 +22,12 @@ export default function Board({ params }: Route.ComponentProps) {
   const [isOpenModalCreateTask, setIsOpenModalCreateTask] = useState(false);
   const [isOpenModalUpdateSectionName, setIsOpenUpdateSectionName] =
     useState(false);
+  const [isOpenModalFullTask, setIsOpenModalFullTask] = useState(false);
+  const [taskData, setTaskData] = useState<ITask | null>(null);
   const [sectionId, setSectionId] = useState<undefined | string>(undefined);
   const { mutateAsync: switchTask } = useSwitchTaskSection(params.boardId);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div></div>;
   if (!board) return <div>Board not found</div>;
 
   const handleDragEnd = async (event: any) => {
@@ -59,6 +63,11 @@ export default function Board({ params }: Route.ComponentProps) {
     createSectionMutation.mutate(data);
   };
 
+  const handleOpenFullTask = (task: ITask) => {
+    setTaskData(task);
+    setIsOpenModalFullTask(true);
+  };
+
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div className="p-6 flex flex-col h-full bg-gradient-to-br from-[#1a1a1a] via-[#222] to-[#2c2c2c] text-white">
@@ -79,6 +88,7 @@ export default function Board({ params }: Route.ComponentProps) {
                     setIsOpenUpdateSectionName(true);
                   }}
                   onDeleteSection={handleDeleteSection}
+                  setIsOpenModalFullTask={handleOpenFullTask}
                 />
               ))
             : ""}
@@ -112,6 +122,14 @@ export default function Board({ params }: Route.ComponentProps) {
           boardId={params.boardId}
           sectionId={sectionId!}
           setIsOpenModal={setIsOpenUpdateSectionName}
+        />
+      )}
+      {isOpenModalFullTask && (
+        <ModalFullTask
+          boardId={params.boardId}
+          task={taskData!}
+          setIsOpenModal={setIsOpenModalFullTask}
+          refetch={refetch}
         />
       )}
     </DndContext>

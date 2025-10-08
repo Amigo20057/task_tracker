@@ -2,6 +2,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { PriorityColor } from "~/constants/colors";
 import type { ITask } from "~/types/board.interface";
 import { CSS } from "@dnd-kit/utilities";
+import { Eye } from "lucide-react";
 
 export default function Task({
   id,
@@ -9,7 +10,16 @@ export default function Task({
   deadline,
   priority,
   taskType,
-}: Partial<ITask> & { id: string }) {
+  description,
+  createdAt,
+  creatorId,
+  sectionId,
+  updatedAt,
+  openModal,
+}: Partial<ITask> & {
+  id: string;
+  openModal: (task: ITask) => void;
+}) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id,
@@ -58,7 +68,29 @@ export default function Task({
       {...listeners}
       {...attributes}
     >
-      <h3 className="font-medium mb-2">{name}</h3>
+      <div className="flex justify-between">
+        <h3 className="font-medium mb-2">{name}</h3>
+        <Eye
+          className="cursor-pointer"
+          onClick={(e) => {
+            e.stopPropagation();
+            openModal({
+              id,
+              name: name!,
+              deadline: deadline!,
+              priority: priority!,
+              taskType: taskType!,
+              description,
+              createdAt: createdAt!,
+              creatorId: creatorId!,
+              sectionId: sectionId!,
+              updatedAt: updatedAt!,
+            });
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+        />
+      </div>
 
       <p
         className={`text-[12px] font-semibold px-3 py-1 rounded-full 

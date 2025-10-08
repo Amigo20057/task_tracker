@@ -1,5 +1,5 @@
 import { Pen, Trash } from "lucide-react";
-import type { ISectionBoard } from "~/types/board.interface";
+import type { ISectionBoard, ITask } from "~/types/board.interface";
 import Task from "./task";
 import { useDroppable } from "@dnd-kit/core";
 
@@ -8,6 +8,7 @@ interface IProps {
   onAddTask: (id: string) => void;
   onDeleteSection: (sectionId: string) => void;
   onUpdateSectionName: (id: string) => void;
+  setIsOpenModalFullTask: (task: ITask) => void;
 }
 
 export default function Section({
@@ -15,6 +16,7 @@ export default function Section({
   onAddTask,
   onDeleteSection,
   onUpdateSectionName,
+  setIsOpenModalFullTask,
 }: IProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: section.id,
@@ -46,11 +48,8 @@ export default function Section({
         {section.tasks?.map((task) => (
           <Task
             key={task.id}
-            id={task.id}
-            name={task.name}
-            priority={task.priority}
-            taskType={task.taskType}
-            deadline={task.deadline}
+            {...task}
+            openModal={(task: ITask) => setIsOpenModalFullTask(task)}
           />
         ))}
       </div>
