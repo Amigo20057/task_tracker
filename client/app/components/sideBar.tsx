@@ -21,16 +21,16 @@ export default function SideBar({ isAuth, isCollapsed }: IProps) {
   const location = useLocation();
   const [buttons, setButtons] = useState<IButtonsSideBar[]>([
     { name: "Home", path: "/", Icon: List },
-    { name: "Documentations", path: "/documentation", Icon: File },
     { name: "Calendar", path: "/calendar", Icon: Calendar },
+    { name: "Documentations", path: "/documentation", Icon: File },
   ]);
 
   useEffect(() => {
     if (boards) {
       const mainButtons = [
         { name: "Home", path: "/", Icon: List },
-        { name: "Documentations", path: "/documentation", Icon: File },
         { name: "Calendar", path: "/calendar", Icon: Calendar },
+        { name: "Documentations", path: "/documentation", Icon: File },
       ];
 
       const boardButtons = boards.map((b) => ({

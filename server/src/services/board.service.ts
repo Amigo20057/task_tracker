@@ -238,4 +238,46 @@ export class BoardService {
       },
     });
   }
+
+  public async updateTask(
+    userId: string,
+    boardId: string,
+    sectionId: string,
+    taskId: string,
+    { ...query }: Partial<Section>
+  ): Promise<Task> {
+    if (!boardId) throw new Error("Board ID is required");
+    const board = await this.prisma.board.findUnique({
+      where: { id: boardId },
+    });
+    if (!board || board.userCreatorId !== userId) {
+      throw new Error("Not authorized to update this board");
+    }
+    const section = await this.prisma.section.findUnique({
+      where: { id: sectionId },
+    });
+    if (!section) {
+      throw new Error("Section not found");
+    }
+    if (section.boardId !== boardId) {
+      throw new Error("Section does not belong to this board");
+    }
+    const task = await this.prisma.task.findUnique({
+      where: { id: taskId },
+    });
+    if (!task) {
+      throw new Error("Task not found");
+    }
+    if (task.sectionId !== sectionId) {
+      throw new Error("Task does not belong to this board");
+    }
+    return await this.prisma.task.update({
+      where: {
+        id: task.id,
+      },
+      data: {
+        ...query,
+      },
+    });
+  }
 }

@@ -174,4 +174,25 @@ export class BoardController {
       });
     }
   };
+
+  public updateTask = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const { boardId, sectionId, taskId } = req.body;
+      const updatedTask = await this.boardService.updateTask(
+        req.user.id,
+        boardId,
+        sectionId,
+        taskId,
+        req.query
+      );
+      res.status(200).json(updatedTask);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res.status(500).json({
+        message: "Update task failed",
+        error: message,
+      });
+    }
+  };
 }
