@@ -242,42 +242,35 @@ export class BoardService {
   public async updateTask(
     userId: string,
     boardId: string,
-    sectionId: string,
     taskId: string,
-    { ...query }: Partial<Section>
+    { ...query }: Partial<Task>
   ): Promise<Task> {
     if (!boardId) throw new Error("Board ID is required");
     const board = await this.prisma.board.findUnique({
       where: { id: boardId },
+      include: {
+        sections: {
+          select: { id: true },
+        },
+      },
     });
     if (!board || board.userCreatorId !== userId) {
       throw new Error("Not authorized to update this board");
     }
-    const section = await this.prisma.section.findUnique({
-      where: { id: sectionId },
-    });
-    if (!section) {
-      throw new Error("Section not found");
-    }
-    if (section.boardId !== boardId) {
-      throw new Error("Section does not belong to this board");
-    }
     const task = await this.prisma.task.findUnique({
       where: { id: taskId },
+      select: { id: true, sectionId: true },
     });
     if (!task) {
       throw new Error("Task not found");
     }
-    if (task.sectionId !== sectionId) {
+    const sectionIds = board.sections.map((s) => s.id);
+    if (!sectionIds.includes(task.sectionId)) {
       throw new Error("Task does not belong to this board");
     }
     return await this.prisma.task.update({
-      where: {
-        id: task.id,
-      },
-      data: {
-        ...query,
-      },
+      where: { id: task.id },
+      data: { ...query },
     });
   }
 }

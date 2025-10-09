@@ -178,11 +178,10 @@ export class BoardController {
   public updateTask = async (req: Request, res: Response) => {
     try {
       if (!req.user) return res.status(404).json({ message: "Unauthorized" });
-      const { boardId, sectionId, taskId } = req.body;
+      const { boardId, taskId } = req.body;
       const updatedTask = await this.boardService.updateTask(
         req.user.id,
         boardId,
-        sectionId,
         taskId,
         req.query
       );

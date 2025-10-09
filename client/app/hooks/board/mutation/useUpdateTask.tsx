@@ -2,11 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import type { ITask } from "~/types/board.interface";
 
-export const useUpdateTask = (
-  boardId: string,
-  sectionId: string,
-  taskId: string
-) => {
+export const useUpdateTask = (boardId: string, taskId: string) => {
   const queryClient = useQueryClient();
 
   const updateTaskMutation = useMutation({
@@ -15,7 +11,6 @@ export const useUpdateTask = (
         `${import.meta.env.VITE_SERVER_URL}/boards/section/task/update/`,
         {
           boardId,
-          sectionId,
           taskId,
         },
         {

@@ -1,6 +1,7 @@
 import { Trash } from "lucide-react";
 import { useState } from "react";
 import { useDeleteTask } from "~/hooks/board/mutation/useDeleteTask";
+import { useUpdateTask } from "~/hooks/board/mutation/useUpdateTask";
 import type { ITask, Priority, TaskType } from "~/types/board.interface";
 
 interface IProps {
@@ -17,6 +18,7 @@ export default function ModalFullTask({
   refetch,
 }: IProps) {
   const { deleteTaskMutation } = useDeleteTask(task.id, boardId);
+  const { updateTaskMutation } = useUpdateTask(boardId, task.id);
   const [name, setName] = useState(task.name);
   const [taskType, setTaskType] = useState<TaskType>(task.taskType);
   const [priority, setPriority] = useState<Priority>(task.priority);
@@ -28,13 +30,14 @@ export default function ModalFullTask({
   );
 
   const handleUpdateTask = () => {
-    const data = {
+    const data: Partial<ITask> = {
       name,
       taskType,
       priority,
       deadline,
       description,
     };
+    updateTaskMutation.mutate(data);
   };
 
   const handleDeleteTask = async () => {
@@ -74,6 +77,13 @@ export default function ModalFullTask({
                      border border-transparent focus:border-white/30 focus:outline-none"
         />
 
+        <textarea
+          name="textarea"
+          placeholder="Enter description"
+          value={description}
+          onChange={(val) => setDescription(val.target.value)}
+        />
+
         <select
           value={taskType}
           onChange={(e) => setTaskType(e.target.value as TaskType)}
@@ -111,13 +121,13 @@ export default function ModalFullTask({
           >
             Cancel
           </button>
-          {/* <button
-            onClick={handleCreateTask}
+          <button
+            onClick={handleUpdateTask}
             className="px-4 py-2 rounded-lg bg-green-600 text-white font-medium
                        hover:bg-green-500 transition-all shadow-md"
           >
             Create
-          </button> */}
+          </button>
         </div>
       </div>
     </div>
