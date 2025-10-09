@@ -35,7 +35,7 @@ export class AuthService {
     user: Pick<User, "email" | "password">
   ): Promise<Omit<User, "password"> & { token: string }> {
     const existingUser = await this.userService.findUserByEmail(user.email);
-    if (!existingUser) throw new Error("User not exists");
+    if (!existingUser) throw new Error("Wrong data");
     const isPasswordValid = await verify(existingUser.password, user.password);
     if (!isPasswordValid) throw new Error("Wrong data");
     const token = this.generateToken({
