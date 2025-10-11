@@ -273,4 +273,51 @@ export class BoardService {
       data: { ...query },
     });
   }
+
+  public async calendar(
+    boardId: string,
+    userId: string
+  ): Promise<
+    Record<
+      string,
+      Array<Pick<Task, "id" | "name" | "deadline" | "taskType" | "priority">>
+    >
+  > {
+    const board = await this.prisma.board.findUnique({
+      where: { id: boardId },
+      include: {
+        sections: {
+          include: {
+            tasks: {
+              select: {
+                id: true,
+                name: true,
+                deadline: true,
+                taskType: true,
+                priority: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!board) throw new Error("Board not found");
+    if (board.userCreatorId !== userId)
+      throw new Error("Not authorized to access this board");
+    type TaskSummary = Pick<
+      Task,
+      "id" | "name" | "deadline" | "taskType" | "priority"
+    >;
+    const allTasks = board.sections.flatMap((s) => s.tasks) as TaskSummary[];
+    const tasksByDate = allTasks.reduce<Record<string, TaskSummary[]>>(
+      (acc, task) => {
+        const dateKey = task.deadline.toISOString().split("T")[0];
+        if (!acc[dateKey]) acc[dateKey] = [];
+        acc[dateKey].push(task);
+        return acc;
+      },
+      {}
+    );
+    return tasksByDate;
+  }
 }

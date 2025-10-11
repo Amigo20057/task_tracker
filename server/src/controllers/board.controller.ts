@@ -194,4 +194,22 @@ export class BoardController {
       });
     }
   };
+
+  public calendar = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(404).json({ message: "Unauthorized" });
+      const boardId = req.params.boardId;
+      const tasksByDate = await this.boardService.calendar(
+        boardId,
+        req.user.id
+      );
+      res.status(200).json(tasksByDate);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return res.status(500).json({
+        message: "Get tasks by date failed",
+        error: message,
+      });
+    }
+  };
 }
