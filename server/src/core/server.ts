@@ -123,6 +123,11 @@ export class Application {
       authMiddleware(this.config),
       this.boardController.updateTask
     );
+    this.boardRouter.get(
+      "/calendar/:boardId",
+      authMiddleware(this.config),
+      this.boardController.calendar
+    );
 
     app.use("/auth", this.authRouter);
     app.use("/users", this.userRouter);
