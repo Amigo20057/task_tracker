@@ -11,6 +11,7 @@ import { authMiddleware } from "../utils/auth.middleware";
 import { UserController } from "../controllers/user.controller";
 import { BoardService } from "../services/board.service";
 import { BoardController } from "../controllers/board.controller";
+import { logsRoutes } from "../utils/logs-routes.miidleware";
 
 export class Application {
   private app: express.Application;
@@ -52,6 +53,8 @@ export class Application {
         credentials: true,
       })
     );
+
+    app.use(logsRoutes);
 
     this.authRouter.post("/register", this.authController.register);
     this.authRouter.post("/login", this.authController.login);
