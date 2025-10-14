@@ -67,11 +67,18 @@ export default function SideBar({ isAuth, isCollapsed }: IProps) {
       `}
     >
       <h2
-        className={`text-center text-lg font-bold transition-opacity duration-300 ${
-          isCollapsed ? "opacity-0" : "opacity-100"
-        }`}
+        className={`text-center text-lg font-bold transition-opacity duration-300 `}
       >
-        Logo
+        {!isCollapsed && (
+          <>
+            Task<span className="text-[#565aee]"> Tracker</span>
+          </>
+        )}
+        {isCollapsed && (
+          <>
+            T<span className="text-[#565aee]"> T</span>
+          </>
+        )}
       </h2>
 
       <div className="mt-[10px] flex flex-col pt-[20px]">

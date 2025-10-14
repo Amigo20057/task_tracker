@@ -38,6 +38,7 @@ export default function ModalFullTask({
       description,
     };
     updateTaskMutation.mutate(data);
+    setIsOpenModal(false);
   };
 
   const handleDeleteTask = async () => {
@@ -59,7 +60,7 @@ export default function ModalFullTask({
       >
         <div className="flex justify-between">
           <h2 className="text-2xl font-semibold text-white mb-4 text-center">
-            Create Task
+            Full Task
           </h2>
           <Trash
             color="red"
@@ -82,6 +83,8 @@ export default function ModalFullTask({
           placeholder="Enter description"
           value={description}
           onChange={(val) => setDescription(val.target.value)}
+          className="w-full rounded-lg bg-[#2a2a2a] text-white px-4 py-2 mb-4 
+                     border border-transparent focus:border-white/30 focus:outline-none"
         />
 
         <select
@@ -126,7 +129,7 @@ export default function ModalFullTask({
             className="px-4 py-2 rounded-lg bg-green-600 text-white font-medium
                        hover:bg-green-500 transition-all shadow-md"
           >
-            Create
+            Update
           </button>
         </div>
       </div>

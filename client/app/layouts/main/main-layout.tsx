@@ -26,6 +26,7 @@ export default function MainLayout() {
           setSearchParam={setSearchParam}
           name={context.user?.name ?? ""}
           toggleSidebar={() => setIsCollapsed((p) => !p)}
+          email={context.user?.email ?? ""}
         />
         <main className="flex-1 p-4">
           <GlobalLoadingSpinner />
