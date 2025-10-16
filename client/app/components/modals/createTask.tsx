@@ -45,14 +45,14 @@ export default function ModalCreateTask({
                       transform transition-all duration-300 scale-100 hover:scale-[1.02]"
       >
         <h2 className="text-2xl font-semibold text-white mb-4 text-center">
-          Create Task
+          Створити тікет
         </h2>
 
         <input
           value={name}
           onChange={(val) => setName(val.target.value)}
           type="text"
-          placeholder="Enter task name..."
+          placeholder="Введіть назву..."
           className="w-full rounded-lg bg-[#2a2a2a] text-white px-4 py-2 mb-4 
                      border border-transparent focus:border-white/30 focus:outline-none"
         />
@@ -92,14 +92,14 @@ export default function ModalCreateTask({
             className="px-4 py-2 rounded-lg bg-gray-700 text-white 
                        hover:bg-gray-600 transition-all"
           >
-            Cancel
+            Скасувати
           </button>
           <button
             onClick={handleCreateTask}
             className="px-4 py-2 rounded-lg bg-green-600 text-white font-medium
                        hover:bg-green-500 transition-all shadow-md"
           >
-            Create
+            Створити
           </button>
         </div>
       </div>

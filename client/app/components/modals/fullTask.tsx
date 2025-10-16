@@ -60,7 +60,7 @@ export default function ModalFullTask({
       >
         <div className="flex justify-between">
           <h2 className="text-2xl font-semibold text-white mb-4 text-center">
-            Full Task
+            Інформація про тікет
           </h2>
           <Trash
             color="red"
@@ -73,14 +73,14 @@ export default function ModalFullTask({
           value={name}
           onChange={(val) => setName(val.target.value)}
           type="text"
-          placeholder="Enter task name..."
+          placeholder="Введіть назву"
           className="w-full rounded-lg bg-[#2a2a2a] text-white px-4 py-2 mb-4 
                      border border-transparent focus:border-white/30 focus:outline-none"
         />
 
         <textarea
           name="textarea"
-          placeholder="Enter description"
+          placeholder="Введіть опис"
           value={description}
           onChange={(val) => setDescription(val.target.value)}
           className="w-full rounded-lg bg-[#2a2a2a] text-white px-4 py-2 mb-4 
@@ -122,14 +122,14 @@ export default function ModalFullTask({
             className="px-4 py-2 rounded-lg bg-gray-700 text-white 
                        hover:bg-gray-600 transition-all"
           >
-            Cancel
+            Скасувати
           </button>
           <button
             onClick={handleUpdateTask}
             className="px-4 py-2 rounded-lg bg-green-600 text-white font-medium
                        hover:bg-green-500 transition-all shadow-md"
           >
-            Update
+            Оновити
           </button>
         </div>
       </div>

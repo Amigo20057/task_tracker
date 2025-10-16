@@ -19,32 +19,35 @@ interface IButtonsSideBar {
 export default function SideBar({ isAuth, isCollapsed }: IProps) {
   const { data: boards, isLoading } = useBoards({ isAuth });
   const location = useLocation();
+
   const [buttons, setButtons] = useState<IButtonsSideBar[]>([
     { name: "Home", path: "/", Icon: List },
-    { name: "Calendar", path: "/calendar", Icon: Calendar },
-    { name: "Documentations", path: "/documentation", Icon: File },
   ]);
 
   useEffect(() => {
-    if (boards) {
-      const mainButtons = [
-        { name: "Home", path: "/", Icon: List },
-        { name: "Calendar", path: "/calendar", Icon: Calendar },
-        { name: "Documentations", path: "/documentation", Icon: File },
-      ];
+    if (!isAuth) {
+      setButtons([{ name: "Home", path: "/", Icon: List }]);
+      return;
+    }
 
-      const boardButtons = boards.map((b) => ({
+    const mainButtons = [
+      { name: "Home", path: "/", Icon: List },
+      { name: "Calendar", path: "/calendar", Icon: Calendar },
+      { name: "Documentations", path: "/documentation", Icon: File },
+    ];
+
+    const boardButtons =
+      boards?.map((b) => ({
         nameSection: "Boards",
         name: b.name,
         path: `/board/${b.id}`,
         Icon: List,
-      }));
+      })) || [];
 
-      setButtons([...mainButtons, ...boardButtons]);
-    }
-  }, [boards]);
+    setButtons([...mainButtons, ...boardButtons]);
+  }, [isAuth, boards]);
 
-  if (isLoading) {
+  if (isLoading && isAuth) {
     return <div></div>;
   }
 
