@@ -5,20 +5,13 @@ import MiniProfile from "./ui/miniProfile";
 import { useState, useRef, useEffect } from "react";
 
 interface IProps {
-  setSearchParam: (param: string) => void;
   toggleSidebar: () => void;
   isAuth: boolean;
   name: string;
   email: string;
 }
 
-export default function Header({
-  setSearchParam,
-  toggleSidebar,
-  isAuth,
-  name,
-  email,
-}: IProps) {
+export default function Header({ toggleSidebar, isAuth, name, email }: IProps) {
   const { logoutMutation } = useLogout();
   const [isOpenMiniProfile, setIsOpenMiniProfile] = useState<boolean>(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -55,15 +48,6 @@ export default function Header({
         >
           <Menu size={22} />
         </button>
-        <div className="bg-[#282828] h-[30px] w-[300px] flex rounded-[5px] items-center p-[10px]">
-          <Search size={18} />
-          <input
-            type="text"
-            placeholder="Пошук"
-            onChange={(e) => setSearchParam(e.target.value)}
-            className="outline-none ml-[10px] w-full bg-transparent"
-          />
-        </div>
       </div>
       <div className="flex items-center justify-around">
         {isAuth ? (

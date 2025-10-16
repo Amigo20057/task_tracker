@@ -7,7 +7,6 @@ import { useProfile } from "~/hooks/user/userProfile";
 
 export default function MainLayout() {
   const { data: userProfileData, isLoading: userIsLoading } = useProfile();
-  const [searchParam, setSearchParam] = useState<string>("");
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const isAuth = !!userProfileData && !userIsLoading;
 
@@ -23,7 +22,6 @@ export default function MainLayout() {
       <div className="flex flex-col flex-1">
         <Header
           isAuth={isAuth}
-          setSearchParam={setSearchParam}
           name={context.user?.name ?? ""}
           toggleSidebar={() => setIsCollapsed((p) => !p)}
           email={context.user?.email ?? ""}
