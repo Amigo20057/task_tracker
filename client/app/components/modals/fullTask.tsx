@@ -25,9 +25,7 @@ export default function ModalFullTask({
   const [deadline, setDeadline] = useState<Date>(
     task.deadline instanceof Date ? task.deadline : new Date(task.deadline)
   );
-  const [description, setDescription] = useState<string>(
-    task.description ?? ""
-  );
+  const [description, setDescription] = useState<string>(task.description!);
 
   const handleUpdateTask = () => {
     const data: Partial<ITask> = {

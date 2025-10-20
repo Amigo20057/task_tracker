@@ -4,7 +4,12 @@ import type { ITask } from "~/types/board.interface";
 export type ResponseCalendarData = Promise<
   Record<
     string,
-    Array<Pick<ITask, "id" | "name" | "deadline" | "taskType" | "priority">>
+    Array<
+      Pick<
+        ITask,
+        "id" | "name" | "deadline" | "taskType" | "priority" | "description"
+      >
+    >
   >
 >;
 

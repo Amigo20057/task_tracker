@@ -295,6 +295,7 @@ export class BoardService {
                 deadline: true,
                 taskType: true,
                 priority: true,
+                description: true,
               },
             },
           },
