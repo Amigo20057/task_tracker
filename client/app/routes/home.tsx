@@ -17,7 +17,6 @@ export default function Home() {
   const context = useOutletContext<Record<string, any>>();
   const { data } = useBoards(context.isAuth);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  console.log("DATA: ", data);
   return (
     <div className="w-full pt-[50px]">
       <h1 className="text-center text-[30px] font-semibold ">

@@ -99,7 +99,7 @@ export default function Board({ params }: Route.ComponentProps) {
              flex flex-col border border-white/10 transition 
              hover:shadow-xl  duration-200 justify-center text-[20px]"
           >
-            New Section
+            Створити секцію
           </div>
         </div>
       </div>

@@ -58,7 +58,7 @@ export default function Section({
         onClick={() => onAddTask(section.id)}
         className="mt-4 w-full bg-[#323231] cursor-pointer text-sm py-2 rounded-lg"
       >
-        + Add task
+        + Створмти таску
       </button>
     </div>
   );
