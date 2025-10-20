@@ -166,6 +166,9 @@ export class BoardController {
     try {
       if (!req.user) return res.status(404).json({ message: "Unauthorized" });
       await this.boardService.deleteTask(req.params.taskId, req.user.id);
+      res.status(200).json({
+        success: true,
+      });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return res.status(500).json({

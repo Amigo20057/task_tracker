@@ -35,19 +35,24 @@ export default function ModalFullTask({
       deadline,
       description,
     };
-    updateTaskMutation.mutate(data);
-    setIsOpenModal(false);
+    updateTaskMutation.mutate(data, {
+      onSuccess: () => {
+        setIsOpenModal(false);
+        refetch();
+      },
+    });
   };
 
-  const handleDeleteTask = async () => {
-    try {
-      setIsOpenModal(false);
-      await deleteTaskMutation.mutateAsync();
-      await refetch();
-    } catch (err) {
-      console.error("Error deleting task: ", err);
-      setIsOpenModal(true);
-    }
+  const handleDeleteTask = () => {
+    deleteTaskMutation.mutate(undefined, {
+      onSuccess: async () => {
+        setIsOpenModal(false);
+        await refetch();
+      },
+      onError: () => {
+        setIsOpenModal(true);
+      },
+    });
   };
 
   return (

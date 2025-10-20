@@ -10,6 +10,8 @@ import type { ITask } from "~/types/board.interface";
 import { useOutletContext } from "react-router";
 import type { IContext } from "~/types/base.interface";
 import ModalFullTask from "~/components/modals/fullTask";
+import { useBoards } from "~/hooks/board/useBoards";
+import { useBoard } from "~/hooks/board/useBoard";
 
 if (typeof window !== "undefined") {
   moment.locale("uk");
@@ -72,6 +74,16 @@ export default function TaskCalendar() {
       }))
     );
   }, [dataCalendar]);
+
+  const handleRefetch = async () => {
+    if (!currentBoardId) return;
+    try {
+      const { data } = await fetchCalendarByBoardId(currentBoardId);
+      setDataCalendar({ ...data });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   if (!isMounted) {
     return (
@@ -173,14 +185,7 @@ export default function TaskCalendar() {
           boardId={currentBoardId!}
           setIsOpenModal={setIsOpenModal}
           task={selectedTask}
-          refetch={() => {
-            const reload = async () => {
-              if (!currentBoardId) return;
-              const { data } = await fetchCalendarByBoardId(currentBoardId);
-              setDataCalendar(data);
-            };
-            reload();
-          }}
+          refetch={handleRefetch}
         />
       )}
 
