@@ -16,6 +16,7 @@ body {
   display: flex;
   min-width: 240px;
   min-height: 100vh;
+  background-color: #191919;
 
   @apply font-prompt;
 }

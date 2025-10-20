@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { ITask } from "~/types/board.interface";
 
-type ResponseCalendarServer = Promise<
+export type ResponseCalendarData = Promise<
   Record<
     string,
     Array<Pick<ITask, "id" | "name" | "deadline" | "taskType" | "priority">>
@@ -9,11 +9,10 @@ type ResponseCalendarServer = Promise<
 >;
 
 export const fetchCalendarByBoardId = async (boardId: string) => {
-  const data = axios.get<ResponseCalendarServer>(
+  return await axios.get<ResponseCalendarData>(
     `${import.meta.env.VITE_SERVER_URL}/boards/calendar/${boardId}`,
     {
       withCredentials: true,
     }
   );
-  return data;
 };
