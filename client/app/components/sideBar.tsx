@@ -33,7 +33,6 @@ export default function SideBar({ isAuth, isCollapsed }: IProps) {
     const mainButtons = [
       { name: "Home", path: "/", Icon: List },
       { name: "Calendar", path: "/calendar", Icon: Calendar },
-      { name: "Documentations", path: "/documentation", Icon: File },
     ];
 
     const boardButtons =
