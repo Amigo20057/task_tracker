@@ -35,14 +35,12 @@ export default function TaskCalendar() {
     setIsMounted(true);
   }, []);
 
-  // коли борди завантажені — обрати перший за замовчуванням
   useEffect(() => {
     if (boards && boards.length > 0 && !currentBoardId) {
       setCurrentBoardId(boards[0].id);
     }
   }, [boards]);
 
-  // завантаження календаря по boardId
   useEffect(() => {
     if (!currentBoardId) return;
 
@@ -176,7 +174,6 @@ export default function TaskCalendar() {
           setIsOpenModal={setIsOpenModal}
           task={selectedTask}
           refetch={() => {
-            // після змін можна перезавантажити календар
             const reload = async () => {
               if (!currentBoardId) return;
               const { data } = await fetchCalendarByBoardId(currentBoardId);
