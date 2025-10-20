@@ -28,24 +28,38 @@ export default function TaskCalendar() {
   const [currentView, setCurrentView] = useState<
     (typeof Views)[keyof typeof Views]
   >(Views.MONTH);
+  const [currentBoardId, setCurrentBoardId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  // коли борди завантажені — обрати перший за замовчуванням
   useEffect(() => {
-    if (!boards || boards.length === 0) return;
+    if (boards && boards.length > 0 && !currentBoardId) {
+      setCurrentBoardId(boards[0].id);
+    }
+  }, [boards]);
+
+  // завантаження календаря по boardId
+  useEffect(() => {
+    if (!currentBoardId) return;
 
     const fetchData = async () => {
       try {
-        const { data } = await fetchCalendarByBoardId(boards[0].id);
+        setIsLoading(true);
+        const { data } = await fetchCalendarByBoardId(currentBoardId);
         setDataCalendar(data);
       } catch (error) {
         console.error("Помилка при завантаженні календаря:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
+
     fetchData();
-  }, [boards]);
+  }, [currentBoardId]);
 
   const events = useMemo(() => {
     if (!dataCalendar) return [];
@@ -90,54 +104,86 @@ export default function TaskCalendar() {
         color: "white",
       }}
     >
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        views={[Views.MONTH, Views.WEEK, Views.DAY]}
-        view={currentView}
-        date={currentDate}
-        onView={(view) => setCurrentView(view)}
-        onNavigate={(date) => setCurrentDate(date)}
-        popup
-        onSelectEvent={(event) => {
-          setSelectedTask(event.resource);
-          setIsOpenModal(true);
-        }}
-        style={{
-          height: "100%",
-          color: "white",
-          backgroundColor: "#2a2a2a",
-          borderRadius: "12px",
-        }}
-        messages={{
-          month: "Місяць",
-          week: "Тиждень",
-          day: "День",
-          today: "Сьогодні",
-          previous: "Назад",
-          next: "Вперед",
-          showMore: (total) => `+${total} ще`,
-        }}
-        eventPropGetter={(event) => ({
-          style: {
-            backgroundColor:
-              event.resource.taskType === "Task" ? "#4f46e5" : "#16a34a",
+      <div className="w-full h-[50px] bg-[#2a2a2a] mb-[10px] flex items-center px-4 rounded-md">
+        <label htmlFor="boardSelect" className="text-sm mr-2 text-gray-300">
+          Виберіть дошку:
+        </label>
+        <select
+          id="boardSelect"
+          value={currentBoardId ?? ""}
+          onChange={(e) => setCurrentBoardId(e.target.value)}
+          className="bg-[#1f1f1f] text-white px-3 py-2 rounded-lg border border-[#3b3b3b] focus:outline-none focus:ring-2 focus:ring-[#4f46e5] transition"
+        >
+          {boards?.map((board) => (
+            <option key={board.id} value={board.id}>
+              {board.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {isLoading ? (
+        <div className="flex items-center justify-center h-[600px] text-gray-400">
+          Завантаження подій...
+        </div>
+      ) : (
+        <Calendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          views={[Views.MONTH, Views.WEEK, Views.DAY]}
+          view={currentView}
+          date={currentDate}
+          onView={(view) => setCurrentView(view)}
+          onNavigate={(date) => setCurrentDate(date)}
+          popup
+          onSelectEvent={(event) => {
+            setSelectedTask(event.resource);
+            setIsOpenModal(true);
+          }}
+          style={{
+            height: "100%",
             color: "white",
-            borderRadius: "8px",
-            padding: "2px 6px",
-            border: "none",
-          },
-        })}
-      />
+            backgroundColor: "#2a2a2a",
+            borderRadius: "12px",
+          }}
+          messages={{
+            month: "Місяць",
+            week: "Тиждень",
+            day: "День",
+            today: "Сьогодні",
+            previous: "Назад",
+            next: "Вперед",
+            showMore: (total) => `+${total} ще`,
+          }}
+          eventPropGetter={(event) => ({
+            style: {
+              backgroundColor:
+                event.resource.taskType === "Task" ? "#4f46e5" : "#16a34a",
+              color: "white",
+              borderRadius: "8px",
+              padding: "2px 6px",
+              border: "none",
+            },
+          })}
+        />
+      )}
 
       {isOpenModal && selectedTask && (
         <ModalFullTask
-          boardId={boards![0].id}
+          boardId={currentBoardId!}
           setIsOpenModal={setIsOpenModal}
           task={selectedTask}
-          refetch={() => {}}
+          refetch={() => {
+            // після змін можна перезавантажити календар
+            const reload = async () => {
+              if (!currentBoardId) return;
+              const { data } = await fetchCalendarByBoardId(currentBoardId);
+              setDataCalendar(data);
+            };
+            reload();
+          }}
         />
       )}
 
