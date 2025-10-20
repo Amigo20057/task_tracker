@@ -29,7 +29,7 @@ export default function FormCommon({ formType }: IProps) {
     if (formType === "register") {
       registerMutation.mutate(data, {
         onSuccess: () =>
-          setToast({ message: "Registration successful!", type: "success" }),
+          setToast({ message: "Реєстрація успішна!", type: "success" }),
         onError: (error: any) =>
           setToast({
             message: error?.response?.data?.error,
@@ -39,7 +39,7 @@ export default function FormCommon({ formType }: IProps) {
     } else if (formType === "login") {
       loginMutation.mutate(data, {
         onSuccess: () =>
-          setToast({ message: "Login successful!", type: "success" }),
+          setToast({ message: "Вхід успішний!", type: "success" }),
         onError: (error: any) =>
           setToast({
             message: error?.response?.data?.error,
@@ -56,20 +56,20 @@ export default function FormCommon({ formType }: IProps) {
         className="w-[380px] bg-[#1f1f1f] rounded-2xl p-8 shadow-lg shadow-black/40 border border-white/10 flex flex-col gap-6"
       >
         <h1 className="text-2xl font-bold text-center mb-2 text-white">
-          {formType === "login" ? "Welcome Back" : "Create Account"}
+          {formType === "login" ? "З поверненням" : "Створити акаунт"}
         </h1>
         <p className="text-gray-400 text-sm text-center mb-4">
           {formType === "login"
-            ? "Please enter your credentials to sign in."
-            : "Welcome! Please enter your details to register."}
+            ? "Будь ласка, введіть свої дані для входу."
+            : "Ласкаво просимо! Введіть свої дані для реєстрації."}
         </p>
 
         {formType === "register" && (
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-300">Name</label>
+            <label className="text-sm font-medium text-gray-300">Ім’я</label>
             <input
               type="text"
-              {...register("name", { required: "Name is required" })}
+              {...register("name", { required: "Імʼя обов'язкове" })}
               className="w-full px-4 py-2 rounded-lg bg-[#2a2a2a] text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition"
             />
             {errors.name && (
@@ -81,10 +81,12 @@ export default function FormCommon({ formType }: IProps) {
         )}
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-300">Email</label>
+          <label className="text-sm font-medium text-gray-300">
+            Електронна пошта
+          </label>
           <input
             type="email"
-            {...register("email", { required: "Email is required" })}
+            {...register("email", { required: "Емейл обов'язковий" })}
             className="w-full px-4 py-2 rounded-lg bg-[#2a2a2a] text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition"
           />
           {errors.email && (
@@ -93,10 +95,10 @@ export default function FormCommon({ formType }: IProps) {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-300">Password</label>
+          <label className="text-sm font-medium text-gray-300">Пароль</label>
           <input
             type="password"
-            {...register("password", { required: "Password is required" })}
+            {...register("password", { required: "Пароль обов'язковий" })}
             className="w-full px-4 py-2 rounded-lg bg-[#2a2a2a] text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition"
           />
           {errors.password && (
@@ -138,31 +140,31 @@ export default function FormCommon({ formType }: IProps) {
                   d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
                 ></path>
               </svg>
-              <span>Processing...</span>
+              <span>Обробка...</span>
             </>
           ) : formType === "login" ? (
-            "Sign In"
+            "Увійти"
           ) : (
-            "Sign Up"
+            "Зареєструватися"
           )}
         </button>
 
         <p className="text-center text-sm text-gray-400">
           {formType === "login" ? (
             <>
-              Don’t have an account?{" "}
+              Немає акаунта?{" "}
               <Link
                 to="/auth/register"
                 className="text-[#3b82f6] hover:underline"
               >
-                Sign up
+                Зареєструватися
               </Link>
             </>
           ) : (
             <>
-              Already have an account?{" "}
+              Вже маєте акаунт?{" "}
               <Link to="/auth/login" className="text-[#3b82f6] hover:underline">
-                Sign in
+                Увійти
               </Link>
             </>
           )}
