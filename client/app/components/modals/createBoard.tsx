@@ -24,7 +24,7 @@ export default function ModalCreateBoard({ setIsOpenModal }: IProps) {
                    transform transition-all duration-300 scale-100 hover:scale-[1.02]"
       >
         <h2 className="text-2xl font-semibold text-white mb-4 text-center">
-          Створити доошку
+          Створити дошку
         </h2>
 
         <input
